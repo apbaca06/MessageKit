@@ -63,6 +63,11 @@ class CustomChatViewController: MessagesViewController {
     }
 
     func configureMessageCollectionView() {
+        let layout = messagesCollectionView.collectionViewLayout as? MessagesCollectionViewFlowLayout
+        layout?.setMessageIncomingAvatarSize(CGSize(width: 30, height: 30))
+        layout?.setMessageIncomingAvatarPosition(.init(vertical: .cellTop))
+        layout?.setMessageOutgoingAvatarSize(.zero) // hidden self's avatar
+
         messagesCollectionView.messagesDataSource = self
         messagesCollectionView.messageCellDelegate = self
         messagesCollectionView.messagesLayoutDelegate = self
@@ -330,13 +335,15 @@ extension CustomChatViewController: MessagesDisplayDelegate {
 
     func messageStyle(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageStyle {
 
-        let tail: MessageStyle.TailCorner = isFromCurrentSender(message: message) ? .bottomRight : .bottomLeft
+        let tail: MessageStyle.TailCorner = isFromCurrentSender(message: message) ? .topRight : .topLeft
         return .bubbleTail(tail, .curved)
     }
 
     func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
-        let avatar = SampleData.shared.getAvatarFor(sender: message.sender)
-        avatarView.set(avatar: avatar)
+        if isFromCurrentSender(message: message) == false {
+            let avatar = SampleData.shared.getAvatarFor(sender: message.sender)
+            avatarView.set(avatar: avatar)
+        }
     }
 
     // MARK: - Location Messages

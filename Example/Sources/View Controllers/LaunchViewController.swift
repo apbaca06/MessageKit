@@ -33,7 +33,7 @@ final internal class LaunchViewController: UITableViewController {
         return .lightContent
     }
 
-    let cells = ["Basic Example", "Advanced Example", "Autocomplete Example", "Embedded Example", "SwiftUI Example", "Settings", "Source Code", "Contributors"]
+    let cells = ["Basic Example", "Advanced Example", "Autocomplete Example", "Embedded Example", "Custom Example", "SwiftUI Example", "Settings", "Source Code", "Contributors"]
     
     // MARK: - View Life Cycle
     
@@ -97,6 +97,8 @@ final internal class LaunchViewController: UITableViewController {
         case "Contributors":
             guard let url = URL(string: "https://github.com/orgs/MessageKit/teams/contributors/members") else { return }
             openURL(url)
+        case "Custom Example":
+            navigationController?.pushViewController(CustomChatViewController(), animated: true)
         default:
             assertionFailure("You need to impliment the action for this cell: \(cell)")
             return

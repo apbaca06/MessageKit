@@ -40,7 +40,6 @@ class CustomChatViewController: MessagesViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -79,12 +78,40 @@ class CustomChatViewController: MessagesViewController {
 
     func configureMessageInputBar() {
         messageInputBar.delegate = self
+        messageInputBar.isTranslucent = true
         messageInputBar.inputTextView.tintColor = .primaryColor
-        messageInputBar.sendButton.setTitleColor(.primaryColor, for: .normal)
-        messageInputBar.sendButton.setTitleColor(
-            UIColor.primaryColor.withAlphaComponent(0.3),
-            for: .highlighted
-        )
+        messageInputBar.inputTextView.backgroundColor = UIColor(red: 245/255, green: 245/255, blue: 245/255, alpha: 1)
+        messageInputBar.inputTextView.placeholder = "New message"
+        messageInputBar.inputTextView.placeholderTextColor = UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
+        messageInputBar.middleContentViewPadding = UIEdgeInsets(top: 4, left: 0, bottom: 4, right: 0)
+        messageInputBar.inputTextView.textContainerInset = UIEdgeInsets(top: 5, left: 12, bottom: 0, right: 12)
+        messageInputBar.inputTextView.placeholderLabelInsets = UIEdgeInsets(top: 5, left: 16, bottom: 0, right: 16)
+        messageInputBar.inputTextView.layer.borderColor = UIColor(red: 200/255, green: 200/255, blue: 200/255, alpha: 1).cgColor
+        messageInputBar.inputTextView.layer.borderWidth = 1.0
+        messageInputBar.inputTextView.layer.cornerRadius = 16.0
+        messageInputBar.inputTextView.layer.masksToBounds = true
+        configureInputBarItems()
+    }
+
+    private func configureInputBarItems() {
+        messageInputBar.setRightStackViewWidthConstant(to: 0, animated: false)
+        messageInputBar.setLeftStackViewWidthConstant(to: 74, animated: false)
+        let addButton = InputBarButtonItem()
+        .configure {
+            $0.setImage(UIImage(named: "add"), for: .normal)
+            $0.setImage(UIImage(named: "add_feedback"), for: .highlighted)
+            $0.imageView?.contentMode = .scaleAspectFit
+            $0.setSize(CGSize(width: 32, height: 32), animated: false)
+        }
+        let stickerButton = InputBarButtonItem()
+        .configure {
+            $0.setImage(UIImage(named: "stickers"), for: .normal)
+            $0.setImage(UIImage(named: "stickers_feedback"), for: .highlighted)
+            $0.imageView?.contentMode = .scaleAspectFit
+            $0.setSize(CGSize(width: 32, height: 32), animated: false)
+        }
+        let leftItems = [stickerButton, addButton, .flexibleSpace]
+        messageInputBar.setStackViewItems(leftItems, forStack: .left, animated: false)
     }
 
     // MARK: - Helpers
@@ -285,7 +312,7 @@ extension CustomChatViewController: InputBarAccessoryViewDelegate {
             sleep(1)
             DispatchQueue.main.async { [weak self] in
                 self?.messageInputBar.sendButton.stopAnimating()
-                self?.messageInputBar.inputTextView.placeholder = "Aa"
+                self?.messageInputBar.inputTextView.placeholder = "New Message"
                 self?.insertMessages(components)
                 self?.messagesCollectionView.scrollToBottom(animated: true)
             }

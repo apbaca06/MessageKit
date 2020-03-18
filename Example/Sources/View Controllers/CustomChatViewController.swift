@@ -14,6 +14,12 @@ import InputBarAccessoryView
 /// A base class for the example controllers
 class CustomChatViewController: MessagesViewController {
 
+    enum PopViewType {
+        case text
+        case add
+        case sticker
+    }
+
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
@@ -22,12 +28,20 @@ class CustomChatViewController: MessagesViewController {
     open lazy var audioController = BasicAudioController(messageCollectionView: messagesCollectionView)
 
     var messageList: [MockMessage] = []
+    var popViewType: PopViewType = .text
+
+    var extraActionVC: ExtraActionViewController?
+    var stickerVC: StickerViewController?
+
+    var keyboardEndFrame: CGRect = .zero
 
     let formatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
         return formatter
     }()
+
+    private var keyboardManager: KeyboardManager?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,10 +50,23 @@ class CustomChatViewController: MessagesViewController {
         configureMessageInputBar()
         loadFirstMessages()
         title = "MessageKit"
+
+        // refer: https://stackoverflow.com/questions/28858908/add-uitapgesturerecognizer-to-uitextview-without-blocking-textview-touches
+        let tapTextViewGesture = UITapGestureRecognizer.init(target: self, action: #selector(textViewTapped))
+        tapTextViewGesture.delegate = self
+        tapTextViewGesture.numberOfTouchesRequired = 1
+        messageInputBar.inputTextView.addGestureRecognizer(tapTextViewGesture)
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        observeKeyboardHeight()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        removeAllPopView()
+        keyboardManager = nil
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -64,7 +91,7 @@ class CustomChatViewController: MessagesViewController {
     func configureMessageCollectionView() {
         let layout = messagesCollectionView.collectionViewLayout as? MessagesCollectionViewFlowLayout
         layout?.setMessageIncomingAvatarSize(CGSize(width: 30, height: 30))
-        layout?.setMessageIncomingAvatarPosition(.init(vertical: .cellTop))
+        layout?.setMessageIncomingAvatarPosition(.init(vertical: .messageLabelTop))
         layout?.setMessageOutgoingAvatarSize(.zero) // hidden self's avatar
 
         messagesCollectionView.messagesDataSource = self
@@ -102,6 +129,7 @@ class CustomChatViewController: MessagesViewController {
             $0.setImage(UIImage(named: "add_feedback"), for: .highlighted)
             $0.imageView?.contentMode = .scaleAspectFit
             $0.setSize(CGSize(width: 32, height: 32), animated: false)
+            $0.addTarget(self, action: #selector(tapAdd), for: .touchUpInside)
         }
         let stickerButton = InputBarButtonItem()
         .configure {
@@ -109,9 +137,26 @@ class CustomChatViewController: MessagesViewController {
             $0.setImage(UIImage(named: "stickers_feedback"), for: .highlighted)
             $0.imageView?.contentMode = .scaleAspectFit
             $0.setSize(CGSize(width: 32, height: 32), animated: false)
+            $0.addTarget(self, action: #selector(tapSticker), for: .touchUpInside)
         }
         let leftItems = [stickerButton, addButton, .flexibleSpace]
         messageInputBar.setStackViewItems(leftItems, forStack: .left, animated: false)
+    }
+
+    // MARK: - IBAction
+
+    @IBAction func tapAdd() {
+        popViewType = .add
+
+        inputTextViewBecomeFirstResponse()
+        processPopView()
+    }
+
+    @IBAction func tapSticker() {
+        popViewType = .sticker
+
+        inputTextViewBecomeFirstResponse()
+        processPopView()
     }
 
     // MARK: - Helpers
@@ -140,6 +185,111 @@ class CustomChatViewController: MessagesViewController {
         return messagesCollectionView.indexPathsForVisibleItems.contains(lastIndexPath)
     }
 
+    func observeKeyboardHeight() {
+        keyboardManager = KeyboardManager()
+        // Add some extra handling to manage content inset
+        keyboardManager?.on(event: .didChangeFrame) { (notification) in
+            let notificationEndFrame = notification.endFrame
+
+            let messageInputBarHeight = self.messageInputBar.bounds.size.height
+
+            var keyboardEndFrame = notificationEndFrame
+
+            if notificationEndFrame.size.height > messageInputBarHeight {
+                // keyboard did show
+                keyboardEndFrame.origin.y += messageInputBarHeight
+
+                self.messageInputBar.setRightStackViewWidthConstant(to: 60, animated: true)
+            } else {
+                // keyboard did hide
+                keyboardEndFrame.origin.y += (messageInputBarHeight - notificationEndFrame.size.height)
+
+                self.messageInputBar.setRightStackViewWidthConstant(to: 0, animated: true)
+            }
+
+            keyboardEndFrame.size.height = notificationEndFrame.size.height - messageInputBarHeight
+            self.keyboardEndFrame = keyboardEndFrame
+            self.processPopView()
+        }
+    }
+
+    private func removeStickerVCFromSuperView(lastWindow: UIWindow) {
+        if let stickerVC = stickerVC, lastWindow.subviews.contains(stickerVC.view) == true {
+            stickerVC.view.removeFromSuperview()
+            self.stickerVC = nil
+        }
+    }
+
+    private func removeExtractionVCFromSuperView(lastWindow: UIWindow) {
+        if let extraActionVC = extraActionVC, lastWindow.subviews.contains(extraActionVC.view) == true {
+            extraActionVC.view.removeFromSuperview()
+            self.extraActionVC = nil
+        }
+    }
+
+    private func removeAllPopView() {
+        guard let lastWindow = UIApplication.shared.windows.last else {
+            return
+        }
+
+        removeStickerVCFromSuperView(lastWindow: lastWindow)
+        removeExtractionVCFromSuperView(lastWindow: lastWindow)
+    }
+
+    private func inputTextViewBecomeFirstResponse() {
+        if messageInputBar.inputTextView.isFirstResponder == false {
+            messageInputBar.inputTextView.becomeFirstResponder()
+        }
+    }
+
+    private func processPopView() {
+        guard let lastWindow = UIApplication.shared.windows.last, keyboardEndFrame.size.height > 0 else {
+            return
+        }
+
+        switch popViewType {
+        case .text:
+            removeAllPopView()
+        case .add:
+            removeStickerVCFromSuperView(lastWindow: lastWindow)
+
+            if self.extraActionVC == nil {
+                self.extraActionVC = ExtraActionViewController()
+                self.extraActionVC?.delegate = self
+            }
+
+            guard let extraActionVC = extraActionVC  else {
+                return
+            }
+
+            if lastWindow.subviews.contains(extraActionVC.view) == false {
+                extraActionVC.view.frame = keyboardEndFrame
+                lastWindow.addSubview(extraActionVC.view)
+            }
+        case .sticker:
+            removeExtractionVCFromSuperView(lastWindow: lastWindow)
+
+            if self.stickerVC == nil {
+                self.stickerVC = StickerViewController()
+                self.stickerVC?.delegate = self
+            }
+
+            guard let stickerVC = stickerVC  else {
+                return
+            }
+
+            if lastWindow.subviews.contains(stickerVC.view) == false {
+                stickerVC.view.frame = keyboardEndFrame
+                lastWindow.addSubview(stickerVC.view)
+            }
+        }
+    }
+
+    @objc private func textViewTapped() {
+        popViewType = .text
+        processPopView()
+    }
+
 }
 
 // MARK: - MessagesDataSource
@@ -159,7 +309,7 @@ extension CustomChatViewController: MessagesDataSource {
 
     func cellTopLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
         if indexPath.section % 3 == 0 {
-            return NSAttributedString(string: MessageKitDateFormatter.shared.string(from: message.sentDate), attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 10), NSAttributedString.Key.foregroundColor: UIColor.darkGray])
+            return NSAttributedString(string: MessageKitDateFormatter.shared.string(from: message.sentDate), attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14), NSAttributedString.Key.foregroundColor: UIColor.darkGray])
         }
         return nil
     }
@@ -167,7 +317,7 @@ extension CustomChatViewController: MessagesDataSource {
     func messageBottomLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
 
         let dateString = formatter.string(from: message.sentDate)
-        return NSAttributedString(string: dateString, attributes: [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .caption2)])
+        return NSAttributedString(string: dateString, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12)])
     }
 }
 
@@ -325,8 +475,8 @@ extension CustomChatViewController: InputBarAccessoryViewDelegate {
             if let str = component as? String {
                 let message = MockMessage(text: str, user: user, messageId: UUID().uuidString, date: Date())
                 insertMessage(message)
-            } else if let img = component as? UIImage {
-                let message = MockMessage(image: img, user: user, messageId: UUID().uuidString, date: Date())
+            } else if let image = component as? UIImage {
+                let message = MockMessage(image: image, user: user, messageId: UUID().uuidString, date: Date())
                 insertMessage(message)
             }
         }
@@ -414,11 +564,44 @@ extension CustomChatViewController: MessagesDisplayDelegate {
 extension CustomChatViewController: MessagesLayoutDelegate {
 
     func cellTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
-        return 18
+        return indexPath.section % 3 == 0 ? 50 : 0
     }
 
     func messageBottomLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
         return 16
     }
 
+}
+
+extension CustomChatViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        if let textView = otherGestureRecognizer.view, textView is InputTextView {
+            return true
+        }
+        return false
+    }
+}
+
+extension CustomChatViewController: ExtraActionViewControllerDelegate {
+    func tapLeft() {
+        print("delegate for tap left")
+    }
+
+    func tapCenter() {
+        print("delegate for tap center")
+    }
+
+    func tapRight() {
+        print("delegate for tap right")
+    }
+}
+
+extension CustomChatViewController: StickerViewControllerDelegate {
+    func didSelectStickerWithName(_ stickerNam: String) {
+        let user = SampleData.shared.currentSender
+        if let image = UIImage(named: stickerNam) {
+           let message = MockMessage(image: image, user: user, messageId: UUID().uuidString, date: Date())
+            insertMessage(message)
+        }
+    }
 }

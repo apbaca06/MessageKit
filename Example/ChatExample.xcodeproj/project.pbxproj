@@ -38,6 +38,12 @@
 		C1DF6DF39F66906000EC76CF /* Pods_ChatExampleTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56F0AC85B38034EC92CCBC7D /* Pods_ChatExampleTests.framework */; };
 		C7CA53A1B85256A5097E7DC7 /* Pods_ChatExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B316705C4717C3B4C916D62 /* Pods_ChatExample.framework */; };
 		D044CC302415ED7B00208604 /* CustomChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D044CC2F2415ED7B00208604 /* CustomChatViewController.swift */; };
+		D0C8388D2420A1AC00F3AC13 /* ExtraActionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C8388B2420A1AC00F3AC13 /* ExtraActionViewController.swift */; };
+		D0C8388E2420A1AC00F3AC13 /* ExtraActionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D0C8388C2420A1AC00F3AC13 /* ExtraActionViewController.xib */; };
+		D0C838912420B4BC00F3AC13 /* StickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C8388F2420B4BC00F3AC13 /* StickerViewController.swift */; };
+		D0C838922420B4BC00F3AC13 /* StickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D0C838902420B4BC00F3AC13 /* StickerViewController.xib */; };
+		D0C838962420BD0400F3AC13 /* StickerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C838942420BD0400F3AC13 /* StickerCollectionViewCell.swift */; };
+		D0C838972420BD0400F3AC13 /* StickerCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D0C838952420BD0400F3AC13 /* StickerCollectionViewCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -114,6 +120,12 @@
 		B2F1C412A96DE613A0AC31F8 /* Pods-ChatExampleUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatExampleUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ChatExampleUITests/Pods-ChatExampleUITests.release.xcconfig"; sourceTree = "<group>"; };
 		BFE5859D088A740A7D43E1B1 /* Pods-ChatExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatExampleTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ChatExampleTests/Pods-ChatExampleTests.release.xcconfig"; sourceTree = "<group>"; };
 		D044CC2F2415ED7B00208604 /* CustomChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomChatViewController.swift; sourceTree = "<group>"; };
+		D0C8388B2420A1AC00F3AC13 /* ExtraActionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtraActionViewController.swift; sourceTree = "<group>"; };
+		D0C8388C2420A1AC00F3AC13 /* ExtraActionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ExtraActionViewController.xib; sourceTree = "<group>"; };
+		D0C8388F2420B4BC00F3AC13 /* StickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerViewController.swift; sourceTree = "<group>"; };
+		D0C838902420B4BC00F3AC13 /* StickerViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StickerViewController.xib; sourceTree = "<group>"; };
+		D0C838942420BD0400F3AC13 /* StickerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerCollectionViewCell.swift; sourceTree = "<group>"; };
+		D0C838952420BD0400F3AC13 /* StickerCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StickerCollectionViewCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -192,6 +204,7 @@
 		385C2949211FF3930010B4BA /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				D0C838932420BC9800F3AC13 /* CustomChatViews */,
 				385C293B211FF38E0010B4BA /* AdvancedExampleViewController.swift */,
 				38CCCC582258419300DD5482 /* AutocompleteExampleViewController.swift */,
 				385C2940211FF38F0010B4BA /* BasicExampleViewController.swift */,
@@ -303,6 +316,19 @@
 				2AC6E3F5C11E39F57598DBE6 /* Pods_ChatExampleUITests.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D0C838932420BC9800F3AC13 /* CustomChatViews */ = {
+			isa = PBXGroup;
+			children = (
+				D0C8388B2420A1AC00F3AC13 /* ExtraActionViewController.swift */,
+				D0C8388C2420A1AC00F3AC13 /* ExtraActionViewController.xib */,
+				D0C8388F2420B4BC00F3AC13 /* StickerViewController.swift */,
+				D0C838902420B4BC00F3AC13 /* StickerViewController.xib */,
+				D0C838942420BD0400F3AC13 /* StickerCollectionViewCell.swift */,
+				D0C838952420BD0400F3AC13 /* StickerCollectionViewCell.xib */,
+			);
+			path = CustomChatViews;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -421,6 +447,9 @@
 				882B5E821CF7D53600B6E160 /* Assets.xcassets in Resources */,
 				5074EF4E2163555900D82952 /* sound2.m4a in Resources */,
 				882B5E831CF7D53600B6E160 /* LaunchScreen.storyboard in Resources */,
+				D0C838922420B4BC00F3AC13 /* StickerViewController.xib in Resources */,
+				D0C8388E2420A1AC00F3AC13 /* ExtraActionViewController.xib in Resources */,
+				D0C838972420BD0400F3AC13 /* StickerCollectionViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -542,6 +571,7 @@
 				385C2923211FF32E0010B4BA /* TableViewCells.swift in Sources */,
 				D044CC302415ED7B00208604 /* CustomChatViewController.swift in Sources */,
 				385C2942211FF38F0010B4BA /* AdvancedExampleViewController.swift in Sources */,
+				D0C838962420BD0400F3AC13 /* StickerCollectionViewCell.swift in Sources */,
 				50739F9621C5090A008CA369 /* BasicAudioController.swift in Sources */,
 				385C2937211FF37B0010B4BA /* SampleData.swift in Sources */,
 				385C2931211FF3630010B4BA /* UIColor+Extensions.swift in Sources */,
@@ -551,7 +581,9 @@
 				385C2948211FF38F0010B4BA /* ChatViewController.swift in Sources */,
 				385C2944211FF38F0010B4BA /* MessageContainerController.swift in Sources */,
 				383B9EB32172A1C4008AB91A /* MockUser.swift in Sources */,
+				D0C8388D2420A1AC00F3AC13 /* ExtraActionViewController.swift in Sources */,
 				385C2943211FF38F0010B4BA /* SettingsViewController.swift in Sources */,
+				D0C838912420B4BC00F3AC13 /* StickerViewController.swift in Sources */,
 				385C2927211FF33B0010B4BA /* MockSocket.swift in Sources */,
 				385C2947211FF38F0010B4BA /* BasicExampleViewController.swift in Sources */,
 				882B5E811CF7D53600B6E160 /* AppDelegate.swift in Sources */,

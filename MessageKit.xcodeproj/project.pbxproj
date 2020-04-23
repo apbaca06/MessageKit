@@ -95,6 +95,8 @@
 		B7A03F731F866A06006AEF79 /* MessageKit+Availability.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7A03F701F866A06006AEF79 /* MessageKit+Availability.swift */; };
 		B7A03F751F866A06006AEF79 /* MessageKit.h in Headers */ = {isa = PBXBuildFile; fileRef = B7A03F721F866A06006AEF79 /* MessageKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B7A03F7B1F866B85006AEF79 /* MessageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7A03F7A1F866B85006AEF79 /* MessageCollectionViewCell.swift */; };
+		D0C1A8E7244FE58100177317 /* TemplateItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C1A8E6244FE58100177317 /* TemplateItem.swift */; };
+		D0C1A8E9244FE8A700177317 /* TemplateMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C1A8E8244FE8A700177317 /* TemplateMessageCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -213,6 +215,8 @@
 		B7A03F711F866A06006AEF79 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B7A03F721F866A06006AEF79 /* MessageKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageKit.h; sourceTree = "<group>"; };
 		B7A03F7A1F866B85006AEF79 /* MessageCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCollectionViewCell.swift; sourceTree = "<group>"; };
+		D0C1A8E6244FE58100177317 /* TemplateItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateItem.swift; sourceTree = "<group>"; };
+		D0C1A8E8244FE8A700177317 /* TemplateMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateMessageCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -260,6 +264,7 @@
 				1F6C040B206A2891007BDE44 /* MessageContentCell.swift */,
 				B7A03F361F866946006AEF79 /* TextMessageCell.swift */,
 				38F8063621740DD500CDB9DB /* TypingIndicatorCell.swift */,
+				D0C1A8E8244FE8A700177317 /* TemplateMessageCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -462,6 +467,7 @@
 				1FD5895F2064E08A004B5081 /* MediaItem.swift */,
 				1FD5896320660C1C004B5081 /* LocationItem.swift */,
 				5073C1142175BE750040EAD5 /* AudioItem.swift */,
+				D0C1A8E6244FE58100177317 /* TemplateItem.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -690,12 +696,14 @@
 				B7A03F731F866A06006AEF79 /* MessageKit+Availability.swift in Sources */,
 				1FE7839E20662835007FA024 /* MessageSizeCalculator.swift in Sources */,
 				38F8063521740DAD00CDB9DB /* TypingBubble.swift in Sources */,
+				D0C1A8E7244FE58100177317 /* TemplateItem.swift in Sources */,
 				1FE783A6206629C2007FA024 /* LocationMessageSizeCalculator.swift in Sources */,
 				B7A03F2D1F866895006AEF79 /* LabelAlignment.swift in Sources */,
 				1F6C040C206A2891007BDE44 /* MessageContentCell.swift in Sources */,
 				B7A03F2C1F866895006AEF79 /* DetectorType.swift in Sources */,
 				B7A03F271F866895006AEF79 /* Avatar.swift in Sources */,
 				50FF34572237FE6A0004DCD7 /* UIImage+Extension.swift in Sources */,
+				D0C1A8E9244FE8A700177317 /* TemplateMessageCell.swift in Sources */,
 				1F82D1431FB1B75B00B81A88 /* AvatarPosition.swift in Sources */,
 				1FF377AC20087DA2004FD648 /* MessagesViewController+Keyboard.swift in Sources */,
 			);

@@ -28,6 +28,7 @@ open class TemplateMessageCell: MessageContentCell {
     open var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
         return imageView
     }()
 

@@ -45,7 +45,7 @@ open class TemplateMessageCell: MessageContentCell {
                 messageLabel.leadingAnchor.constraint(equalTo: messageContainerView.leadingAnchor, constant: 15),
                 messageLabel.trailingAnchor.constraint(equalTo: messageContainerView.trailingAnchor, constant: -5),
                 imageView.topAnchor.constraint(equalTo: messageLabel.bottomAnchor, constant: 0),
-                imageView.leadingAnchor.constraint(equalTo: messageContainerView.leadingAnchor, constant: 10),
+                imageView.leadingAnchor.constraint(equalTo: messageContainerView.leadingAnchor, constant: 0),
                 imageView.trailingAnchor.constraint(equalTo: messageContainerView.trailingAnchor, constant: 0),
                 imageView.bottomAnchor.constraint(equalTo: messageContainerView.bottomAnchor, constant: 0),
             ])

@@ -33,8 +33,6 @@ class CustomChatViewController: MessagesViewController {
     var extraActionVC: ExtraActionViewController?
     var stickerVC: StickerViewController?
 
-    var keyboardEndFrame: CGRect = .zero
-
     let formatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
@@ -190,50 +188,38 @@ class CustomChatViewController: MessagesViewController {
         // Add some extra handling to manage content inset
         keyboardManager?.on(event: .didChangeFrame) { (notification) in
             let notificationEndFrame = notification.endFrame
-
             let messageInputBarHeight = self.messageInputBar.bounds.size.height
 
-            var keyboardEndFrame = notificationEndFrame
-
-            if notificationEndFrame.size.height > messageInputBarHeight {
-                // keyboard did show
-                keyboardEndFrame.origin.y += messageInputBarHeight
-
-                self.messageInputBar.setRightStackViewWidthConstant(to: 60, animated: true)
-            } else {
-                // keyboard did hide
-                keyboardEndFrame.origin.y += (messageInputBarHeight - notificationEndFrame.size.height)
-
+            if notificationEndFrame.size.height > messageInputBarHeight { // keyboard did show
+                self.messageInputBar.setRightStackViewWidthConstant(to: 50, animated: true)
+                self.processPopView()
+            } else { // keyboard did hide
                 self.messageInputBar.setRightStackViewWidthConstant(to: 0, animated: true)
             }
-
-            keyboardEndFrame.size.height = notificationEndFrame.size.height - messageInputBarHeight
-            self.keyboardEndFrame = keyboardEndFrame
-            self.processPopView()
         }
     }
 
-    private func removeStickerVCFromSuperView(lastWindow: UIWindow) {
-        if let stickerVC = stickerVC, lastWindow.subviews.contains(stickerVC.view) == true {
-            stickerVC.view.removeFromSuperview()
-            self.stickerVC = nil
+    private func removeStickerVCFromSuperView(superView: UIView) {
+        for view in superView.subviews where view == stickerVC?.view {
+            view.removeFromSuperview()
+            stickerVC = nil
         }
     }
 
-    private func removeExtractionVCFromSuperView(lastWindow: UIWindow) {
-        if let extraActionVC = extraActionVC, lastWindow.subviews.contains(extraActionVC.view) == true {
-            extraActionVC.view.removeFromSuperview()
-            self.extraActionVC = nil
+    private func removeExtractionVCFromSuperView(superView: UIView) {
+        for view in superView.subviews where view == extraActionVC?.view {
+            view.removeFromSuperview()
+            extraActionVC = nil
         }
     }
 
-    private func removeAllPopView() {
-        guard let lastWindow = UIApplication.shared.windows.last else {
+    func removeAllPopView() {
+        guard let lastWindow = UIApplication.shared.windows.last, let inputContainerView = lastWindow.subviews.first else {
             return
         }
 
-        removeStickerVCFromSuperView(lastWindow: lastWindow)
-        removeExtractionVCFromSuperView(lastWindow: lastWindow)
+        removeStickerVCFromSuperView(superView: inputContainerView)
+        removeExtractionVCFromSuperView(superView: inputContainerView)
     }
 
     private func inputTextViewBecomeFirstResponse() {
@@ -243,45 +229,55 @@ class CustomChatViewController: MessagesViewController {
     }
 
     private func processPopView() {
-        guard let lastWindow = UIApplication.shared.windows.last, keyboardEndFrame.size.height > 0 else {
-            return
-        }
+
+        guard let lastWindow = UIApplication.shared.windows.last, let inputContainerView = lastWindow.subviews.first, let inputHostView = inputContainerView.subviews.first else {
+                    return
+                }
 
         switch popViewType {
         case .text:
             removeAllPopView()
         case .add:
-            removeStickerVCFromSuperView(lastWindow: lastWindow)
+            removeStickerVCFromSuperView(superView: inputContainerView)
 
-            if self.extraActionVC == nil {
-                self.extraActionVC = ExtraActionViewController()
-                self.extraActionVC?.delegate = self
+            if extraActionVC == nil {
+                extraActionVC = ExtraActionViewController()
+                extraActionVC?.delegate = self
             }
 
-            guard let extraActionVC = extraActionVC  else {
+            guard let extraActionView = extraActionVC?.view, inputContainerView.contains(extraActionView) == false, let inputBarView = inputHostView.subviews.last else {
                 return
             }
 
-            if lastWindow.subviews.contains(extraActionVC.view) == false {
-                extraActionVC.view.frame = keyboardEndFrame
-                lastWindow.addSubview(extraActionVC.view)
-            }
+            inputContainerView.addSubview(extraActionView)
+            extraActionView.translatesAutoresizingMaskIntoConstraints = false
+
+            NSLayoutConstraint.activate([
+                extraActionView.topAnchor.constraint(equalTo: inputBarView.bottomAnchor, constant: 0),
+                extraActionView.leadingAnchor.constraint(equalTo: inputContainerView.leadingAnchor, constant: 0),
+                extraActionView.trailingAnchor.constraint(equalTo: inputContainerView.trailingAnchor, constant: 0),
+                extraActionView.bottomAnchor.constraint(equalTo: inputContainerView.bottomAnchor, constant: 0)
+            ])
         case .sticker:
-            removeExtractionVCFromSuperView(lastWindow: lastWindow)
+            removeExtractionVCFromSuperView(superView: inputContainerView)
 
             if self.stickerVC == nil {
                 self.stickerVC = StickerViewController()
                 self.stickerVC?.delegate = self
             }
 
-            guard let stickerVC = stickerVC  else {
+            guard let stickerView = stickerVC?.view, inputContainerView.contains(stickerView) == false, let inputBarView = inputHostView.subviews.last else {
                 return
             }
 
-            if lastWindow.subviews.contains(stickerVC.view) == false {
-                stickerVC.view.frame = keyboardEndFrame
-                lastWindow.addSubview(stickerVC.view)
-            }
+            inputContainerView.addSubview(stickerView)
+            stickerView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                stickerView.topAnchor.constraint(equalTo: inputBarView.bottomAnchor, constant: 0),
+                stickerView.leadingAnchor.constraint(equalTo: inputContainerView.leadingAnchor, constant: 0),
+                stickerView.trailingAnchor.constraint(equalTo: inputContainerView.trailingAnchor, constant: 0),
+                stickerView.bottomAnchor.constraint(equalTo: inputContainerView.bottomAnchor, constant: 0)
+            ])
         }
     }
 

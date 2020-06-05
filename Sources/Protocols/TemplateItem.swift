@@ -12,4 +12,12 @@ import Foundation
 public protocol TemplateItem: MediaItem {
     /// The text.
     var text: NSAttributedString { get }
+    /// The action text
+    var actionString: NSAttributedString? { get }
+    /// The text view's content inset
+    var textViewContentInset: UIEdgeInsets { get }
+    /// The bottom text view's content inset
+    var bottomTextViewContentInset: UIEdgeInsets { get }
+    /// The line's color
+    var lineColor: UIColor { get }
 }

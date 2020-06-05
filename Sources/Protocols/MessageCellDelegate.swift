@@ -159,6 +159,15 @@ public protocol MessageCellDelegate: MessageLabelDelegate {
     /// method `messageForItem(at:indexPath:messagesCollectionView)`.
     func didStopAudio(in cell: AudioMessageCell)
 
+    /// Triggered when a tap occurs on the action text view from template cell.
+    ///
+    /// - Parameters:
+    ///   - cell: The template cell where the touch occurred.
+    ///
+    /// You can get a reference to the `MessageType` for the cell by using `UICollectionView`'s
+    /// `indexPath(for: cell)` method. Then using the returned `IndexPath` with the `MessagesDataSource`
+    /// method `messageForItem(at:indexPath:messagesCollectionView)`.
+    func didTapActionView(in cell: TemplateMessageCell)
 }
 
 public extension MessageCellDelegate {
@@ -184,6 +193,8 @@ public extension MessageCellDelegate {
     func didPauseAudio(in cell: AudioMessageCell) {}
 
     func didStopAudio(in cell: AudioMessageCell) {}
+
+    func didTapActionView(in cell: TemplateMessageCell) {}
 
     func didTapMessageBottomLabel(in cell: MessageCollectionViewCell) {}
     

@@ -76,7 +76,7 @@ class CustomChatViewController: MessagesViewController {
     func loadFirstMessages() {
         DispatchQueue.global(qos: .userInitiated).async {
             let count = UserDefaults.standard.mockMessagesCount()
-            SampleData.shared.getMessages(count: count) { messages in
+            SampleData.shared.getTemplateMessages(count: count) { messages in
                 DispatchQueue.main.async {
                     self.messageList = messages
                     self.messagesCollectionView.reloadData()
@@ -390,6 +390,10 @@ extension CustomChatViewController: MessageCellDelegate {
         print("Accessory view tapped")
     }
 
+    func didTapActionView(in cell: TemplateMessageCell) {
+        print("Tap action view")
+    }
+
 }
 
 // MARK: - MessageLabelDelegate
@@ -508,8 +512,7 @@ extension CustomChatViewController: MessagesDisplayDelegate {
 
     func messageStyle(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageStyle {
 
-        let tail: MessageStyle.TailCorner = isFromCurrentSender(message: message) ? .topRight : .topLeft
-        return .bubbleTail(tail, .curved)
+        return .bubble
     }
 
     func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {

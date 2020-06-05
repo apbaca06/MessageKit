@@ -44,6 +44,7 @@ final internal class SampleData {
         case Phone
         case Custom
         case ShareContact
+        case Template
     }
 
     let system = MockUser(senderId: "000000", displayName: "System")
@@ -195,6 +196,11 @@ final internal class SampleData {
         case .ShareContact:
             let randomContact = Int(arc4random_uniform(UInt32(contactsToShare.count)))
             return MockMessage(contact: contactsToShare[randomContact], user: user, messageId: uniqueID, date: date)
+        case .Template:
+            let randomNumberImage = Int(arc4random_uniform(UInt32(messageImages.count)))
+            let image = messageImages[randomNumberImage]
+            let randomSentence = Lorem.sentence()
+            return MockMessage(template: CustomTemplateItem(image: image, text: randomSentence, actionString: "send"), user: user, messageId: uniqueID, date: date)
         }
     }
     // swiftlint:enable cyclomatic_complexity
@@ -240,6 +246,22 @@ final internal class SampleData {
         completion(messages)
     }
     
+    func getTemplateMessages(count: Int, completion: ([MockMessage]) -> Void) {
+        var messages: [MockMessage] = []
+        // Enable Template Messages
+        UserDefaults.standard.set(true, forKey: "Template Messages")
+        for _ in 0..<count {
+            let uniqueID = UUID().uuidString
+            let date = dateAddingRandomTime()
+            let randomNumberImage = Int(arc4random_uniform(UInt32(messageImages.count)))
+            let image = messageImages[randomNumberImage]
+            let randomSentence = Lorem.sentence()
+            let message = MockMessage(template: CustomTemplateItem(image: image, text: randomSentence, actionString: "send"), user: system, messageId: uniqueID, date: date)
+            messages.append(message)
+        }
+        completion(messages)
+    }
+
     func getMessages(count: Int, allowedSenders: [MockUser], completion: ([MockMessage]) -> Void) {
         var messages: [MockMessage] = []
         // Disable Custom Messages

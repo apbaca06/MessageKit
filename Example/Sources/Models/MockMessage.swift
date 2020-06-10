@@ -159,6 +159,9 @@ struct CustomTemplateItem: TemplateItem {
     var textViewContentInset: UIEdgeInsets
     var bottomTextViewContentInset: UIEdgeInsets
     var lineColor: UIColor
+    var imageHeight: CGFloat
+    var textViewHeight: CGFloat
+    var bottomTextViewHeight: CGFloat
 
     init(image: UIImage?, text: String, actionString: String?) {
 
@@ -171,6 +174,7 @@ struct CustomTemplateItem: TemplateItem {
         let attributedTextString = NSAttributedString.init(string: text, attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16, weight: .regular)])
         self.text = attributedTextString
         self.image = image
+        
         let attributedActionString = NSAttributedString.init(string: actionString ?? "", attributes: [NSAttributedString.Key.foregroundColor: UIColor.primaryColor, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 18, weight: .medium)])
 
         if actionString != nil {
@@ -185,26 +189,25 @@ struct CustomTemplateItem: TemplateItem {
         // image ratio should be 4:3 (width:height)
         let imageHeight: CGFloat = (image != nil) ? maxBubbleWidth * 3 / 4 : 0
 
-        var contentRect = CGRect.zero
+        var height: CGFloat = 0
         let textSize = CGSize(width: maxTextWidth, height: CGFloat(Float.greatestFiniteMagnitude))
 
         if text.isEmpty == false {
-            let mutableAttributes = attributedTextString.attributes(at: 0, effectiveRange: nil)
-
-            contentRect = NSString(string: text).boundingRect(with: textSize, options: [NSStringDrawingOptions.usesLineFragmentOrigin, NSStringDrawingOptions.usesFontLeading], attributes: mutableAttributes, context: nil)
+            let contentRect = attributedTextString.boundingRect(with: textSize, options: [NSStringDrawingOptions.usesLineFragmentOrigin, NSStringDrawingOptions.usesFontLeading], context: nil)
+            height = contentRect.size.height + self.textViewContentInset.top + self.textViewContentInset.bottom
         }
 
         var bottomHeight: CGFloat = 0
 
         if let actionString = actionString, actionString.isEmpty == false {
-            let mutableAttributes = attributedActionString.attributes(at: 0, effectiveRange: nil)
-            let bottomContentRect = NSString(string: actionString).boundingRect(with: textSize, options: [NSStringDrawingOptions.usesLineFragmentOrigin, NSStringDrawingOptions.usesFontLeading], attributes: mutableAttributes, context: nil)
+            let bottomContentRect = attributedActionString.boundingRect(with: textSize, options: [NSStringDrawingOptions.usesLineFragmentOrigin, NSStringDrawingOptions.usesFontLeading], context: nil)
             bottomHeight = bottomContentRect.size.height + self.bottomTextViewContentInset.top + self.bottomTextViewContentInset.bottom
         }
-
-        let height = contentRect.size.height + self.textViewContentInset.top + self.textViewContentInset.bottom
+        
+        self.imageHeight = imageHeight
+        self.textViewHeight = height.rounded(.up)
+        self.bottomTextViewHeight = bottomHeight.rounded(.up)
 
         self.size = CGSize(width: maxBubbleWidth, height: imageHeight + height.rounded(.up) + bottomHeight.rounded(.up))
-
     }
 }

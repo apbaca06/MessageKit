@@ -52,42 +52,12 @@ open class TemplateMessageCell: MessageContentCell {
 
     // MARK: - Methods
 
-    open func setupConstraints() {
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        messageLabel.translatesAutoresizingMaskIntoConstraints = false
-        lineView.translatesAutoresizingMaskIntoConstraints = false
-        actionLabel.translatesAutoresizingMaskIntoConstraints = false
-
-        if #available(iOS 11.0, *) {
-            imageView.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
-            messageLabel.setContentHuggingPriority(.required, for: .vertical)
-            actionLabel.setContentHuggingPriority(.required, for: .vertical)
-            NSLayoutConstraint.activate([
-                imageView.topAnchor.constraint(equalTo: messageContainerView.topAnchor, constant: 0),
-                imageView.leadingAnchor.constraint(equalTo: messageContainerView.leadingAnchor, constant: 0),
-                imageView.trailingAnchor.constraint(equalTo: messageContainerView.trailingAnchor, constant: 0),
-                imageView.bottomAnchor.constraint(equalTo: messageLabel.topAnchor, constant: 0),
-                messageLabel.leadingAnchor.constraint(equalTo: messageContainerView.leadingAnchor, constant: 0),
-                messageLabel.trailingAnchor.constraint(equalTo: messageContainerView.trailingAnchor, constant: 0),
-                lineView.topAnchor.constraint(equalTo: actionLabel.topAnchor, constant: 0),
-                lineView.leadingAnchor.constraint(equalTo: messageContainerView.leadingAnchor, constant: 0),
-                lineView.trailingAnchor.constraint(equalTo: messageContainerView.trailingAnchor, constant: 0),
-                lineView.heightAnchor.constraint(equalToConstant: 0.5),
-                actionLabel.topAnchor.constraint(equalTo: messageLabel.bottomAnchor, constant: 0),
-                actionLabel.leadingAnchor.constraint(equalTo: messageContainerView.leadingAnchor, constant: 0),
-                actionLabel.trailingAnchor.constraint(equalTo: messageContainerView.trailingAnchor, constant: 0),
-                actionLabel.bottomAnchor.constraint(equalTo: messageContainerView.bottomAnchor, constant: 0)
-            ])
-        }
-    }
-
     open override func setupSubviews() {
         super.setupSubviews()
         messageContainerView.addSubview(imageView)
         messageContainerView.addSubview(messageLabel)
         actionLabel.addSubview(lineView)
         messageContainerView.addSubview(actionLabel)
-        setupConstraints()
     }
 
     open override func prepareForReuse() {
@@ -101,7 +71,8 @@ open class TemplateMessageCell: MessageContentCell {
     open override func handleTapGesture(_ gesture: UIGestureRecognizer) {
         let touchLocation = gesture.location(in: self)
         // compute action label touch area, currently action label which is hardly touchable
-        let actionViewTouchArea = CGRect(actionLabel.frame.origin.x, actionLabel.frame.origin.y, actionLabel.frame.size.width, actionLabel.frame.size.height)
+        let actionView = actionLabel.frame.size.height > 0 ? actionLabel : messageLabel
+        let actionViewTouchArea = CGRect(actionView.frame.origin.x, actionView.frame.origin.y, actionView.frame.size.width, actionView.frame.size.height)
         let translateTouchLocation = convert(touchLocation, to: messageContainerView)
         if actionViewTouchArea.contains(translateTouchLocation) {
             delegate?.didTapActionView(in: self)
@@ -109,7 +80,7 @@ open class TemplateMessageCell: MessageContentCell {
             super.handleTapGesture(gesture)
         }
     }
-
+    
     open override func configure(with message: MessageType, at indexPath: IndexPath, and messagesCollectionView: MessagesCollectionView) {
         super.configure(with: message, at: indexPath, and: messagesCollectionView)
 
@@ -119,7 +90,12 @@ open class TemplateMessageCell: MessageContentCell {
 
         switch message.kind {
         case .template(let template):
+            let bubbleWidth = messageContainerView.frame.size.width
             imageView.image = template.image ?? template.placeholderImage
+            imageView.frame = CGRect(x: 0, y: 0, width: bubbleWidth, height: template.imageHeight)
+            messageLabel.frame = CGRect(x: 0, y: template.imageHeight, width: bubbleWidth, height: template.textViewHeight)
+            lineView.frame = CGRect(x: 0, y: 0, width: bubbleWidth, height: 0.5)
+            actionLabel.frame = CGRect(x: 0, y: template.imageHeight + template.textViewHeight, width: bubbleWidth, height: template.bottomTextViewHeight)
             messageLabel.attributedText = template.text
             messageLabel.textContainerInset = template.textViewContentInset
             actionLabel.attributedText = template.actionString

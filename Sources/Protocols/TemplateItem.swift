@@ -20,4 +20,10 @@ public protocol TemplateItem: MediaItem {
     var bottomTextViewContentInset: UIEdgeInsets { get }
     /// The line's color
     var lineColor: UIColor { get }
+    /// The image's height
+    var imageHeight: CGFloat { get }
+    /// The text view's height
+    var textViewHeight: CGFloat { get }
+    /// The bottom text view's height
+    var bottomTextViewHeight: CGFloat { get }
 }

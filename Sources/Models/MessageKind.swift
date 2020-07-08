@@ -44,6 +44,9 @@ public enum MessageKind {
 
     /// A video message.
     case video(MediaItem)
+    
+    /// A loading message.
+    case loading(MediaItem)
 
     /// A template message
     case template(TemplateItem)

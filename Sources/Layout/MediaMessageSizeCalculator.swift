@@ -41,6 +41,8 @@ open class MediaMessageSizeCalculator: MessageSizeCalculator {
             return sizeForMediaItem(maxWidth, item)
         case .video(let item):
             return sizeForMediaItem(maxWidth, item)
+        case .loading(let item):
+            return sizeForMediaItem(maxWidth, item)
         case .template(let item):
             return item.size
         default:

@@ -25,15 +25,21 @@
 import class AVFoundation.AVAudioPlayer
 
 /// A protocol used to represent the data for an audio message.
-public protocol AudioItem {
-
+public protocol AudioItem: MediaItem {
+    /// The text.
+    var text: NSAttributedString { get }
+    /// The text view's content inset
+    var textViewContentInset: UIEdgeInsets { get }
+    /// The line's color
+    var lineColor: UIColor { get }
+    /// The image's height
+    var imageHeight: CGFloat { get }
+    /// The text view's height
+    var textViewHeight: CGFloat { get }
     /// The url where the audio file is located.
-    var url: URL { get }
-
+    var audioURL: URL { get }
     /// The audio file duration in seconds.
-    var duration: Float { get }
-
+    var audioDuration: Float { get }
     /// The size of the audio item.
-    var size: CGSize { get }
-
+    var audioSize: CGSize { get }
 }

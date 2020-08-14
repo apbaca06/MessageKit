@@ -103,8 +103,8 @@ open class BasicAudioController: NSObject, AVAudioPlayerDelegate {
         case .audio(let item):
             playingCell = audioCell
             playingMessage = message
-            guard let player = try? AVAudioPlayer(contentsOf: item.url) else {
-                print("Failed to create audio player for URL: \(item.url)")
+            guard let player = try? AVAudioPlayer(contentsOf: item.audioURL) else {
+                print("Failed to create audio player for URL: \(item.audioURL)")
                 return
             }
             audioPlayer = player

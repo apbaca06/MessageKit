@@ -76,7 +76,7 @@ class CustomChatViewController: MessagesViewController {
     func loadFirstMessages() {
         DispatchQueue.global(qos: .userInitiated).async {
             let count = UserDefaults.standard.mockMessagesCount()
-            SampleData.shared.getTemplateMessages(count: count) { messages in
+            SampleData.shared.getTemplateAudioMessages(count: count) { messages in
                 DispatchQueue.main.async {
                     self.messageList = messages
                     self.messagesCollectionView.reloadData()

@@ -180,7 +180,7 @@ final internal class SampleData {
         case .Audio:
             let randomNumberSound = Int(arc4random_uniform(UInt32(sounds.count)))
             let soundURL = sounds[randomNumberSound]
-            return MockMessage(audioURL: soundURL, user: user, messageId: uniqueID, date: date)
+            return MockMessage(audioItem: MockAudiotem(image: nil, text: "", audioURL: soundURL), user: user, messageId: uniqueID, date: date)
         case .Emoji:
             let randomNumberEmoji = Int(arc4random_uniform(UInt32(emojis.count)))
             return MockMessage(emoji: emojis[randomNumberEmoji], user: user, messageId: uniqueID, date: date)
@@ -257,6 +257,24 @@ final internal class SampleData {
             let image = messageImages[randomNumberImage]
             let randomSentence = Lorem.sentence()
             let message = MockMessage(template: CustomTemplateItem(image: image, text: randomSentence, actionString: "send"), user: system, messageId: uniqueID, date: date)
+            messages.append(message)
+        }
+        completion(messages)
+    }
+    
+    func getTemplateAudioMessages(count: Int, completion: ([MockMessage]) -> Void) {
+        var messages: [MockMessage] = []
+        // Enable Template Messages
+        UserDefaults.standard.set(true, forKey: "Template Messages")
+        for i in 0..<count {
+            let uniqueID = UUID().uuidString
+            let date = dateAddingRandomTime()
+            let randomNumberImage = Int(arc4random_uniform(UInt32(messageImages.count)))
+            let image = i % 2 == 0 ? nil : messageImages[randomNumberImage]
+            let randomSentence = i % 3 == 0 ? "" : Lorem.sentence()
+            let randomNumberSound = Int(arc4random_uniform(UInt32(sounds.count)))
+            let soundURL = sounds[randomNumberSound]
+            let message = MockMessage(audioItem: MockAudiotem(image: image, text: randomSentence, audioURL: soundURL), user: system, messageId: uniqueID, date: date)
             messages.append(message)
         }
         completion(messages)

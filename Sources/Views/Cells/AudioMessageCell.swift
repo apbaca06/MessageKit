@@ -27,6 +27,37 @@ import AVFoundation
 
 /// A subclass of `MessageContentCell` used to display video and audio messages.
 open class AudioMessageCell: MessageContentCell {
+    open var imageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        return imageView
+    }()
+
+    open var messageLabel: UITextView = {
+        let textView = UITextView()
+        textView.backgroundColor = .clear
+        textView.isEditable = false
+        textView.isScrollEnabled = false
+        textView.contentInset = .zero
+        textView.textContainer.lineFragmentPadding = 0
+        if #available(iOS 11.0, *) {
+            textView.adjustsFontForContentSizeCategory = true
+        }
+
+        return textView
+    }()
+
+    open var lineView: UIView = {
+        let lineView = UIView()
+        return lineView
+    }()
+    
+    open var audioView: UIView = {
+        let audioView = UIView()
+        audioView.backgroundColor = .clear
+        return audioView
+    }()
 
     /// The play button view to display on audio messages.
     public lazy var playButton: UIButton = {
@@ -65,23 +96,29 @@ open class AudioMessageCell: MessageContentCell {
     /// Responsible for setting up the constraints of the cell's subviews.
     open func setupConstraints() {
         playButton.constraint(equalTo: CGSize(width: 25, height: 25))
-        playButton.addConstraints(left: messageContainerView.leftAnchor, centerY: messageContainerView.centerYAnchor, leftConstant: 5)
+        playButton.addConstraints(left: audioView.leftAnchor, centerY: audioView.centerYAnchor, leftConstant: 15)
         activityIndicatorView.addConstraints(centerY: playButton.centerYAnchor, centerX: playButton.centerXAnchor)
-        durationLabel.addConstraints(right: messageContainerView.rightAnchor, centerY: messageContainerView.centerYAnchor, rightConstant: 15)
-        progressView.addConstraints(left: playButton.rightAnchor, right: durationLabel.leftAnchor, centerY: messageContainerView.centerYAnchor, leftConstant: 5, rightConstant: 5)
+        durationLabel.addConstraints(right: audioView.rightAnchor, centerY: audioView.centerYAnchor, rightConstant: 15)
+        progressView.addConstraints(left: playButton.rightAnchor, right: durationLabel.leftAnchor, centerY: audioView.centerYAnchor, leftConstant: 5, rightConstant: 5)
     }
 
     open override func setupSubviews() {
         super.setupSubviews()
-        messageContainerView.addSubview(playButton)
-        messageContainerView.addSubview(activityIndicatorView)
-        messageContainerView.addSubview(durationLabel)
-        messageContainerView.addSubview(progressView)
+        messageContainerView.addSubview(imageView)
+        messageContainerView.addSubview(messageLabel)
+        messageContainerView.addSubview(lineView)
+        messageContainerView.addSubview(audioView)
+        audioView.addSubview(playButton)
+        audioView.addSubview(activityIndicatorView)
+        audioView.addSubview(durationLabel)
+        audioView.addSubview(progressView)
         setupConstraints()
     }
 
     open override func prepareForReuse() {
         super.prepareForReuse()
+        messageLabel.attributedText = nil
+        imageView.image = nil
         progressView.progress = 0
         playButton.isSelected = false
         activityIndicatorView.stopAnimating()
@@ -92,11 +129,11 @@ open class AudioMessageCell: MessageContentCell {
     /// Handle tap gesture on contentView and its subviews.
     open override func handleTapGesture(_ gesture: UIGestureRecognizer) {
         let touchLocation = gesture.location(in: self)
-        // compute play button touch area, currently play button size is (25, 25) which is hardly touchable
-        // add 10 px around current button frame and test the touch against this new frame
-        let playButtonTouchArea = CGRect(playButton.frame.origin.x - 10.0, playButton.frame.origin.y - 10, playButton.frame.size.width + 20, playButton.frame.size.height + 20)
+        // compute action label touch area, currently action label which is hardly touchable
+        let audioViewTouchArea = CGRect(audioView.frame.origin.x, audioView.frame.origin.y, audioView.frame.size.width, audioView.frame.size.height)
+        let imageViewTouchArea = CGRect(imageView.frame.origin.x, imageView.frame.origin.y, imageView.frame.size.width, imageView.frame.size.height)
         let translateTouchLocation = convert(touchLocation, to: messageContainerView)
-        if playButtonTouchArea.contains(translateTouchLocation) {
+        if audioViewTouchArea.contains(translateTouchLocation) || imageViewTouchArea.contains(translateTouchLocation) {
             delegate?.didTapPlayButton(in: self)
         } else {
             super.handleTapGesture(gesture)
@@ -135,7 +172,17 @@ open class AudioMessageCell: MessageContentCell {
         displayDelegate.configureAudioCell(self, message: message)
 
         if case let .audio(audioItem) = message.kind {
-            durationLabel.text = displayDelegate.audioProgressTextFormat(audioItem.duration, for: self, in: messagesCollectionView)
+            let bubbleWidth = messageContainerView.frame.size.width
+            imageView.image = audioItem.image ?? audioItem.placeholderImage
+            imageView.frame = CGRect(x: 0, y: 0, width: bubbleWidth, height: audioItem.imageHeight)
+            messageLabel.frame = CGRect(x: 0, y: audioItem.imageHeight, width: bubbleWidth, height: audioItem.textViewHeight)
+            messageLabel.attributedText = audioItem.text
+            messageLabel.textContainerInset = audioItem.textViewContentInset
+            let linViewHeight: CGFloat = 0.5
+            lineView.frame = CGRect(x: 0, y: audioItem.imageHeight + audioItem.textViewHeight, width: bubbleWidth, height: linViewHeight)
+            lineView.backgroundColor = audioItem.lineColor
+            audioView.frame = CGRect(x: 0, y: audioItem.imageHeight + audioItem.textViewHeight + linViewHeight, width: audioItem.audioSize.width, height: audioItem.audioSize.height)
+            durationLabel.text = displayDelegate.audioProgressTextFormat(audioItem.audioDuration, for: self, in: messagesCollectionView)
         }
     }
 }

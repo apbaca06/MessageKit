@@ -54,18 +54,59 @@ private struct ImageMediaItem: MediaItem {
 
 }
 
-private struct MockAudiotem: AudioItem {
+struct MockAudiotem: AudioItem {
 
-    var url: URL
+    var url: URL?
+    var image: UIImage?
+    var placeholderImage: UIImage
     var size: CGSize
-    var duration: Float
+    var text: NSAttributedString
+    var textViewContentInset: UIEdgeInsets
+    var lineColor: UIColor
+    var imageHeight: CGFloat
+    var textViewHeight: CGFloat
+    var audioURL: URL
+    var audioDuration: Float
+    var audioSize: CGSize
+    var audioTinyColor: UIColor
 
-    init(url: URL) {
-        self.url = url
-        self.size = CGSize(width: 160, height: 35)
+    init(image: UIImage?, text: String, audioURL: URL) {
+
+        // if change must change SDK's template cell
+        self.textViewContentInset = UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
+        self.lineColor = UIColor(red: 204/255, green: 204/255, blue: 204/255, alpha: 1)
+
+        self.placeholderImage = UIImage(named: "Wu-Zhong") ?? UIImage()
+        let attributedTextString = NSAttributedString.init(string: text, attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16, weight: .regular)])
+        self.text = attributedTextString
+        self.image = image
+
+        let screenWidth: CGFloat = UIScreen.main.bounds.width
+        let collectionViewLeftRightPadding: CGFloat = 95
+        let maxBubbleWidth = screenWidth - collectionViewLeftRightPadding
+        let maxTextWidth = maxBubbleWidth - textViewContentInset.left - textViewContentInset.right
+
+        // image ratio should be 4:3 (width:height)
+        let imageHeight: CGFloat = (image != nil) ? maxBubbleWidth * 3 / 4 : 0
+
+        var height: CGFloat = 0
+        let textSize = CGSize(width: maxTextWidth, height: CGFloat(Float.greatestFiniteMagnitude))
+
+        if text.isEmpty == false {
+            let contentRect = attributedTextString.boundingRect(with: textSize, options: [NSStringDrawingOptions.usesLineFragmentOrigin, NSStringDrawingOptions.usesFontLeading], context: nil)
+            height = contentRect.size.height + self.textViewContentInset.top + self.textViewContentInset.bottom
+        }
+
+        self.imageHeight = imageHeight
+        self.textViewHeight = height.rounded(.up)
+        self.audioURL = audioURL
         // compute duration
-        let audioAsset = AVURLAsset(url: url)
-        self.duration = Float(CMTimeGetSeconds(audioAsset.duration))
+        let audioAsset = AVURLAsset(url: audioURL)
+        self.audioDuration = Float(CMTimeGetSeconds(audioAsset.duration))
+        self.audioSize = CGSize(width: maxBubbleWidth, height: 40)
+        self.audioTinyColor = .red
+
+        self.size = CGSize(width: maxBubbleWidth, height: imageHeight + height.rounded(.up) + audioSize.height)
     }
 
 }
@@ -135,8 +176,7 @@ internal struct MockMessage: MessageType {
         self.init(kind: .emoji(emoji), user: user, messageId: messageId, date: date)
     }
 
-    init(audioURL: URL, user: MockUser, messageId: String, date: Date) {
-        let audioItem = MockAudiotem(url: audioURL)
+    init(audioItem: MockAudiotem, user: MockUser, messageId: String, date: Date) {
         self.init(kind: .audio(audioItem), user: user, messageId: messageId, date: date)
     }
 

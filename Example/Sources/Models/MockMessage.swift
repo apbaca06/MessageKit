@@ -68,7 +68,6 @@ struct MockAudiotem: AudioItem {
     var audioURL: URL
     var audioDuration: Float
     var audioSize: CGSize
-    var audioTinyColor: UIColor
 
     init(image: UIImage?, text: String, audioURL: URL) {
 
@@ -105,7 +104,6 @@ struct MockAudiotem: AudioItem {
         let audioAsset = AVURLAsset(url: audioURL)
         self.audioDuration = Float(CMTimeGetSeconds(audioAsset.duration))
         self.audioSize = CGSize(width: maxBubbleWidth, height: 40)
-        self.audioTinyColor = .red
 
         self.size = CGSize(width: maxBubbleWidth, height: imageHeight + height.rounded(.up) + audioSize.height)
     }

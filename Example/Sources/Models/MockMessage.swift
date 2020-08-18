@@ -83,7 +83,8 @@ struct MockAudiotem: AudioItem {
 
         let screenWidth: CGFloat = UIScreen.main.bounds.width
         let collectionViewLeftRightPadding: CGFloat = 95
-        let maxBubbleWidth = screenWidth - collectionViewLeftRightPadding
+        let onlyAudio = image == nil && text.isEmpty
+        let maxBubbleWidth = onlyAudio ? 160 : screenWidth - collectionViewLeftRightPadding
         let maxTextWidth = maxBubbleWidth - textViewContentInset.left - textViewContentInset.right
 
         // image ratio should be 4:3 (width:height)

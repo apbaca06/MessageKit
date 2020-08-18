@@ -92,7 +92,7 @@ open class AudioMessageCell: MessageContentCell {
     }()
     
     // MARK: - Methods
-
+    
     /// Responsible for setting up the constraints of the cell's subviews.
     open func setupConstraints() {
         playButton.constraint(equalTo: CGSize(width: 25, height: 25))
@@ -112,7 +112,6 @@ open class AudioMessageCell: MessageContentCell {
         audioView.addSubview(activityIndicatorView)
         audioView.addSubview(durationLabel)
         audioView.addSubview(progressView)
-        setupConstraints()
     }
 
     open override func prepareForReuse() {
@@ -183,6 +182,7 @@ open class AudioMessageCell: MessageContentCell {
             lineView.backgroundColor = audioItem.lineColor
             audioView.frame = CGRect(x: 0, y: audioItem.imageHeight + audioItem.textViewHeight + linViewHeight, width: audioItem.audioSize.width, height: audioItem.audioSize.height)
             durationLabel.text = displayDelegate.audioProgressTextFormat(audioItem.audioDuration, for: self, in: messagesCollectionView)
+            setupConstraints()
         }
     }
 }

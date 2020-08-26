@@ -177,10 +177,10 @@ open class AudioMessageCell: MessageContentCell {
             messageLabel.frame = CGRect(x: 0, y: audioItem.imageHeight, width: bubbleWidth, height: audioItem.textViewHeight)
             messageLabel.attributedText = audioItem.text
             messageLabel.textContainerInset = audioItem.textViewContentInset
-            let linViewHeight: CGFloat = 0.5
-            lineView.frame = CGRect(x: 0, y: audioItem.imageHeight + audioItem.textViewHeight, width: bubbleWidth, height: linViewHeight)
+            let lineViewHeight: CGFloat = (audioItem.imageHeight + audioItem.textViewHeight == 0) ? 0 : 0.5
+            lineView.frame = CGRect(x: 0, y: audioItem.imageHeight + audioItem.textViewHeight, width: bubbleWidth, height: lineViewHeight)
             lineView.backgroundColor = audioItem.lineColor
-            audioView.frame = CGRect(x: 0, y: audioItem.imageHeight + audioItem.textViewHeight + linViewHeight, width: audioItem.audioSize.width, height: audioItem.audioSize.height)
+            audioView.frame = CGRect(x: 0, y: audioItem.imageHeight + audioItem.textViewHeight + lineViewHeight, width: audioItem.audioSize.width, height: audioItem.audioSize.height)
             durationLabel.text = displayDelegate.audioProgressTextFormat(audioItem.audioDuration, for: self, in: messagesCollectionView)
             setupConstraints()
         }

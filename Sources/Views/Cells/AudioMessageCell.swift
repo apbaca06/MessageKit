@@ -73,7 +73,7 @@ open class AudioMessageCell: MessageContentCell {
     public lazy var durationLabel: UILabel = {
         let durationLabel = UILabel(frame: CGRect.zero)
         durationLabel.textAlignment = .right
-        durationLabel.font = UIFont.systemFont(ofSize: 14)
+        durationLabel.font = UIFont.systemFont(ofSize: 18, weight: .medium)
         durationLabel.text = "0:00"
         return durationLabel
     }()
@@ -88,6 +88,8 @@ open class AudioMessageCell: MessageContentCell {
     public lazy var progressView: UIProgressView = {
         let progressView = UIProgressView(progressViewStyle: .default)
         progressView.progress = 0.0
+        progressView.layer.cornerRadius = 3
+        progressView.clipsToBounds = true
         return progressView
     }()
     
@@ -95,11 +97,13 @@ open class AudioMessageCell: MessageContentCell {
     
     /// Responsible for setting up the constraints of the cell's subviews.
     open func setupConstraints() {
-        playButton.constraint(equalTo: CGSize(width: 25, height: 25))
-        playButton.addConstraints(left: audioView.leftAnchor, centerY: audioView.centerYAnchor, leftConstant: 15)
+        playButton.constraint(equalTo: CGSize(width: 24, height: 24))
+        playButton.addConstraints(left: audioView.leftAnchor, centerY: audioView.centerYAnchor, leftConstant: 12)
         activityIndicatorView.addConstraints(centerY: playButton.centerYAnchor, centerX: playButton.centerXAnchor)
         durationLabel.addConstraints(right: audioView.rightAnchor, centerY: audioView.centerYAnchor, rightConstant: 15)
-        progressView.addConstraints(left: playButton.rightAnchor, right: durationLabel.leftAnchor, centerY: audioView.centerYAnchor, leftConstant: 5, rightConstant: 5)
+        progressView.addConstraints(left: playButton.rightAnchor, right: durationLabel.leftAnchor, centerY: audioView.centerYAnchor, leftConstant: 6, rightConstant: 8)
+        let heightConstraint = progressView.heightAnchor.constraint(equalToConstant: 6)
+        progressView.addConstraint(heightConstraint)
     }
 
     open override func setupSubviews() {
@@ -143,21 +147,6 @@ open class AudioMessageCell: MessageContentCell {
 
     open override func configure(with message: MessageType, at indexPath: IndexPath, and messagesCollectionView: MessagesCollectionView) {
         super.configure(with: message, at: indexPath, and: messagesCollectionView)
-
-        guard let dataSource = messagesCollectionView.messagesDataSource else {
-            fatalError(MessageKitError.nilMessagesDataSource)
-        }
-
-        let playButtonLeftConstraint = messageContainerView.constraints.filter { $0.identifier == "left" }.first
-        let durationLabelRightConstraint = messageContainerView.constraints.filter { $0.identifier == "right" }.first
-
-        if !dataSource.isFromCurrentSender(message: message) {
-            playButtonLeftConstraint?.constant = 12
-            durationLabelRightConstraint?.constant = -8
-        } else {
-            playButtonLeftConstraint?.constant = 5
-            durationLabelRightConstraint?.constant = -15
-        }
 
         guard let displayDelegate = messagesCollectionView.messagesDisplayDelegate else {
             fatalError(MessageKitError.nilMessagesDisplayDelegate)

@@ -27,6 +27,13 @@ import AVFoundation
 
 /// A subclass of `MessageContentCell` used to display video and audio messages.
 open class AudioMessageCell: MessageContentCell {
+    /// The `MessageCellDelegate` for the cell.
+    open override weak var delegate: MessageCellDelegate? {
+        didSet {
+            messageLabel.delegate = delegate
+        }
+    }
+    
     open var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -34,19 +41,7 @@ open class AudioMessageCell: MessageContentCell {
         return imageView
     }()
 
-    open var messageLabel: UITextView = {
-        let textView = UITextView()
-        textView.backgroundColor = .clear
-        textView.isEditable = false
-        textView.isScrollEnabled = false
-        textView.contentInset = .zero
-        textView.textContainer.lineFragmentPadding = 0
-        if #available(iOS 11.0, *) {
-            textView.adjustsFontForContentSizeCategory = true
-        }
-
-        return textView
-    }()
+    open var messageLabel = MessageLabel()
 
     open var lineView: UIView = {
         let lineView = UIView()
@@ -69,7 +64,7 @@ open class AudioMessageCell: MessageContentCell {
         return playButton
     }()
 
-    /// The time duration lable to display on audio messages.
+    /// The time duration label to display on audio messages.
     public lazy var durationLabel: UILabel = {
         let durationLabel = UILabel(frame: CGRect.zero)
         durationLabel.textAlignment = .right
@@ -158,14 +153,14 @@ open class AudioMessageCell: MessageContentCell {
         progressView.tintColor = tintColor
 
         displayDelegate.configureAudioCell(self, message: message)
-
+        
         if case let .audio(audioItem) = message.kind {
             let bubbleWidth = messageContainerView.frame.size.width
             imageView.image = audioItem.image ?? audioItem.placeholderImage
             imageView.frame = CGRect(x: 0, y: 0, width: bubbleWidth, height: audioItem.imageHeight)
             messageLabel.frame = CGRect(x: 0, y: audioItem.imageHeight, width: bubbleWidth, height: audioItem.textViewHeight)
             messageLabel.attributedText = audioItem.text
-            messageLabel.textContainerInset = audioItem.textViewContentInset
+            messageLabel.textInsets = audioItem.textViewContentInset
             let lineViewHeight: CGFloat = (audioItem.imageHeight + audioItem.textViewHeight == 0) ? 0 : 0.5
             lineView.frame = CGRect(x: 0, y: audioItem.imageHeight + audioItem.textViewHeight, width: bubbleWidth, height: lineViewHeight)
             lineView.backgroundColor = audioItem.lineColor
@@ -173,5 +168,22 @@ open class AudioMessageCell: MessageContentCell {
             durationLabel.text = displayDelegate.audioProgressTextFormat(audioItem.audioDuration, for: self, in: messagesCollectionView)
             setupConstraints()
         }
+        
+        let enabledDetectors = displayDelegate.enabledDetectors(for: message, at: indexPath, in: messagesCollectionView)
+
+        messageLabel.configure {
+            messageLabel.enabledDetectors = enabledDetectors
+            for detector in enabledDetectors {
+                let attributes = displayDelegate.detectorAttributes(for: detector, and: message, at: indexPath)
+                messageLabel.setAttributes(attributes, detector: detector)
+            }
+        }
+
+    }
+    
+    /// Used to handle the cell's contentView's tap gesture.
+    /// Return false when the contentView does not need to handle the gesture.
+    open override func cellContentView(canHandle touchPoint: CGPoint) -> Bool {
+        return messageLabel.handleGesture(touchPoint)
     }
 }

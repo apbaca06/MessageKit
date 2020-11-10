@@ -495,7 +495,7 @@ extension CustomChatViewController: MessagesDisplayDelegate {
 
     func detectorAttributes(for detector: DetectorType, and message: MessageType, at indexPath: IndexPath) -> [NSAttributedString.Key: Any] {
         switch detector {
-        case .hashtag, .mention: return [.foregroundColor: UIColor.blue]
+        case .url, .mention: return [.foregroundColor: UIColor.red]
         default: return MessageLabel.defaultAttributes
         }
     }

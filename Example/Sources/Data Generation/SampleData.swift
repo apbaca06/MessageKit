@@ -271,7 +271,7 @@ final internal class SampleData {
             let date = dateAddingRandomTime()
             let randomNumberImage = Int(arc4random_uniform(UInt32(messageImages.count)))
             let image = i % 2 == 0 ? nil : messageImages[randomNumberImage]
-            let randomSentence = i % 3 == 0 ? "" : Lorem.sentence()
+            let randomSentence = i % 3 == 0 ? "https://tw.yahoo.com" : Lorem.sentence()
             let randomNumberSound = Int(arc4random_uniform(UInt32(sounds.count)))
             let soundURL = sounds[randomNumberSound]
             let message = MockMessage(audioItem: MockAudiotem(image: image, text: randomSentence, audioURL: soundURL), user: system, messageId: uniqueID, date: date)

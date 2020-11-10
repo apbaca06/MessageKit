@@ -10,6 +10,13 @@
 import UIKit
 
 open class TemplateMessageCell: MessageContentCell {
+    /// The `MessageCellDelegate` for the cell.
+    open override weak var delegate: MessageCellDelegate? {
+        didSet {
+            messageLabel.delegate = delegate
+        }
+    }
+    
     open var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -17,19 +24,7 @@ open class TemplateMessageCell: MessageContentCell {
         return imageView
     }()
 
-    open var messageLabel: UITextView = {
-        let textView = UITextView()
-        textView.backgroundColor = .clear
-        textView.isEditable = false
-        textView.isScrollEnabled = false
-        textView.contentInset = .zero
-        textView.textContainer.lineFragmentPadding = 0
-        if #available(iOS 11.0, *) {
-            textView.adjustsFontForContentSizeCategory = true
-        }
-
-        return textView
-    }()
+    open var messageLabel = MessageLabel()
 
     open var lineView: UIView = {
         let lineView = UIView()
@@ -97,7 +92,7 @@ open class TemplateMessageCell: MessageContentCell {
             lineView.frame = CGRect(x: 0, y: 0, width: bubbleWidth, height: 0.5)
             actionLabel.frame = CGRect(x: 0, y: template.imageHeight + template.textViewHeight, width: bubbleWidth, height: template.bottomTextViewHeight)
             messageLabel.attributedText = template.text
-            messageLabel.textContainerInset = template.textViewContentInset
+            messageLabel.textInsets = template.textViewContentInset
             actionLabel.attributedText = template.actionString
             actionLabel.textContainerInset = template.bottomTextViewContentInset
             actionLabel.textAlignment = .center
@@ -107,5 +102,21 @@ open class TemplateMessageCell: MessageContentCell {
         }
 
         displayDelegate.configureMediaMessageImageView(imageView, for: message, at: indexPath, in: messagesCollectionView)
+        
+        let enabledDetectors = displayDelegate.enabledDetectors(for: message, at: indexPath, in: messagesCollectionView)
+
+        messageLabel.configure {
+            messageLabel.enabledDetectors = enabledDetectors
+            for detector in enabledDetectors {
+                let attributes = displayDelegate.detectorAttributes(for: detector, and: message, at: indexPath)
+                messageLabel.setAttributes(attributes, detector: detector)
+            }
+        }
+    }
+    
+    /// Used to handle the cell's contentView's tap gesture.
+    /// Return false when the contentView does not need to handle the gesture.
+    open override func cellContentView(canHandle touchPoint: CGPoint) -> Bool {
+        return messageLabel.handleGesture(touchPoint)
     }
 }

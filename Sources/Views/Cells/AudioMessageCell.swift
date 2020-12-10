@@ -147,10 +147,12 @@ open class AudioMessageCell: MessageContentCell {
             fatalError(MessageKitError.nilMessagesDisplayDelegate)
         }
 
-        let tintColor = displayDelegate.audioTintColor(for: message, at: indexPath, in: messagesCollectionView)
-        playButton.imageView?.tintColor = tintColor
-        durationLabel.textColor = tintColor
-        progressView.tintColor = tintColor
+        let progressTintColor = displayDelegate.audioProgressTintColor(for: message, at: indexPath, in: messagesCollectionView)
+        let trackTintColor = displayDelegate.audioTrackTintColor(for: message, at: indexPath, in: messagesCollectionView)
+        playButton.imageView?.tintColor = progressTintColor
+        durationLabel.textColor = progressTintColor
+        progressView.tintColor = progressTintColor
+        progressView.trackTintColor = trackTintColor
 
         displayDelegate.configureAudioCell(self, message: message)
         

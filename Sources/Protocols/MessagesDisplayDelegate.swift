@@ -197,7 +197,18 @@ public protocol MessagesDisplayDelegate: AnyObject {
     ///
     /// - Note:
     ///   The default value returned by this method is UIColor.sendButtonBlue
-    func audioTintColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor
+    func audioProgressTintColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor
+    
+    /// Specifies the track tint color of play button and progress bar for an `AudioMessageCell`.
+    ///
+    /// - Parameters:
+    ///   - message: A `MessageType` with a `MessageKind` case of `.audio` to which the color will apply.
+    ///   - indexPath: The `IndexPath` of the cell.
+    ///   - messagesCollectionView: The `MessagesCollectionView` in which this cell will be displayed.
+    ///
+    /// - Note:
+    ///   The default value returned by this method is UIColor.green
+    func audioTrackTintColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor
 
     /// Used to format the audio sound duration in a readable string
     ///
@@ -290,8 +301,12 @@ public extension MessagesDisplayDelegate {
         
     }
 
-    func audioTintColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
+    func audioProgressTintColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
         return UIColor.sendButtonBlue
+    }
+    
+    func audioTrackTintColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
+        return UIColor.green
     }
 
     func audioProgressTextFormat(_ duration: Float, for audioCell: AudioMessageCell, in messageCollectionView: MessagesCollectionView) -> String {

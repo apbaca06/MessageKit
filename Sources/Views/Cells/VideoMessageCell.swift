@@ -97,6 +97,7 @@ open class VideoMessageCell: TemplateMessageCell {
 //            actionLabel.textContainerInset = item.bottomTextViewContentInset
 //            actionLabel.textAlignment = .center
 //            lineView.backgroundColor = item.lineColor
+            timeDurationButton.setTitle(displayDelegate.durationProgressTextFormat(item.timeDuration, for: self, in: messagesCollectionView), for: .normal)
         default:
             break
         }

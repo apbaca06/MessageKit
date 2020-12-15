@@ -167,7 +167,7 @@ open class AudioMessageCell: MessageContentCell {
             lineView.frame = CGRect(x: 0, y: audioItem.imageHeight + audioItem.textViewHeight, width: bubbleWidth, height: lineViewHeight)
             lineView.backgroundColor = audioItem.lineColor
             audioView.frame = CGRect(x: 0, y: audioItem.imageHeight + audioItem.textViewHeight + lineViewHeight, width: audioItem.audioSize.width, height: audioItem.audioSize.height)
-            durationLabel.text = displayDelegate.audioProgressTextFormat(audioItem.audioDuration, for: self, in: messagesCollectionView)
+            durationLabel.text = displayDelegate.durationProgressTextFormat(audioItem.audioDuration, for: self, in: messagesCollectionView)
             setupConstraints()
         }
         

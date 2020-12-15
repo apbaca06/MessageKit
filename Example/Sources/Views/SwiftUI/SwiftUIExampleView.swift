@@ -34,10 +34,11 @@ struct SwiftUIExampleView: View {
     }
     
 }
-
+// swiftlint:disable type_name
 @available(iOS 13.0, *)
 struct SwiftUIExampleView_Previews: PreviewProvider {
     static var previews: some View {
         SwiftUIExampleView()
     }
 }
+// swiftlint:enable type_name

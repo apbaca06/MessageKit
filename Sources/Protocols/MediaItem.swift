@@ -28,7 +28,7 @@ import Foundation
 public protocol MediaItem {
 
     /// The url where the media is located.
-    var url: URL? { get }
+    var photoURL: URL? { get }
 
     /// The image.
     var image: UIImage? { get }
@@ -38,5 +38,11 @@ public protocol MediaItem {
 
     /// The size of the media item.
     var size: CGSize { get }
+}
 
+public protocol VideoItem: TemplateItem {
+    /// The time duration of the video
+    var timeDuration: Float { get }
+    /// The video url
+    var videoURL: URL { get }
 }

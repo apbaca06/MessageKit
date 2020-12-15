@@ -25,11 +25,7 @@
 import class AVFoundation.AVAudioPlayer
 
 /// A protocol used to represent the data for an audio message.
-public protocol AudioItem: MediaItem {
-    /// The text.
-    var text: NSAttributedString { get }
-    /// The text view's content inset
-    var textViewContentInset: UIEdgeInsets { get }
+public protocol AudioItem: MediaItem, MessageItem {
     /// The line's color
     var lineColor: UIColor { get }
     /// The image's height

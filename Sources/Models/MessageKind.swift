@@ -43,7 +43,7 @@ public enum MessageKind {
     case photo(MediaItem)
 
     /// A video message.
-    case video(MediaItem)
+    case video(VideoItem)
     
     /// A loading message.
     case loading(MediaItem)

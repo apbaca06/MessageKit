@@ -84,19 +84,19 @@ open class TemplateMessageCell: MessageContentCell {
         }
 
         switch message.kind {
-        case .template(let template):
+        case .template(let item), .video(let item as TemplateItem):
             let bubbleWidth = messageContainerView.frame.size.width
-            imageView.image = template.image ?? template.placeholderImage
-            imageView.frame = CGRect(x: 0, y: 0, width: bubbleWidth, height: template.imageHeight)
-            messageLabel.frame = CGRect(x: 0, y: template.imageHeight, width: bubbleWidth, height: template.textViewHeight)
+            imageView.image = item.image ?? item.placeholderImage
+            imageView.frame = CGRect(x: 0, y: 0, width: bubbleWidth, height: item.imageHeight)
+            messageLabel.frame = CGRect(x: 0, y: item.imageHeight, width: bubbleWidth, height: item.textViewHeight)
             lineView.frame = CGRect(x: 0, y: 0, width: bubbleWidth, height: 0.5)
-            actionLabel.frame = CGRect(x: 0, y: template.imageHeight + template.textViewHeight, width: bubbleWidth, height: template.bottomTextViewHeight)
-            messageLabel.attributedText = template.text
-            messageLabel.textInsets = template.textViewContentInset
-            actionLabel.attributedText = template.actionString
-            actionLabel.textContainerInset = template.bottomTextViewContentInset
+            actionLabel.frame = CGRect(x: 0, y: item.imageHeight + item.textViewHeight, width: bubbleWidth, height: item.bottomTextViewHeight)
+            messageLabel.attributedText = item.text
+            messageLabel.textInsets = item.textViewContentInset
+            actionLabel.attributedText = item.actionString
+            actionLabel.textContainerInset = item.bottomTextViewContentInset
             actionLabel.textAlignment = .center
-            lineView.backgroundColor = template.lineColor
+            lineView.backgroundColor = item.lineColor
         default:
             break
         }

@@ -26,6 +26,7 @@ public enum ImageType: String {
     case play
     case pause
     case disclouser
+    case circle
 }
 
 import UIKit

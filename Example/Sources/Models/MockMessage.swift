@@ -45,6 +45,7 @@ private struct ImageMediaItem: MediaItem {
     var image: UIImage?
     var placeholderImage: UIImage
     var size: CGSize
+    var imageHeight: CGFloat = 0
 
     init(image: UIImage) {
         self.image = image

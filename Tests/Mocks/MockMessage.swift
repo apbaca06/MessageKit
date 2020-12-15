@@ -40,8 +40,8 @@ struct MockLocationItem: LocationItem {
 }
 
 struct MockMediaItem: MediaItem {
-
-    var url: URL?
+    
+    var photoURL: URL?
     var image: UIImage?
     var placeholderImage: UIImage
     var size: CGSize
@@ -54,19 +54,76 @@ struct MockMediaItem: MediaItem {
 
 }
 
-private struct MockAudiotem: AudioItem {
-
-    var url: URL
-    var size: CGSize
-    var duration: Float
+private struct MockAudioItem: AudioItem {
+    var size: CGSize = .zero
+    
+    var lineColor: UIColor = .red
+    
+    var imageHeight: CGFloat = 0
+    
+    var textViewHeight: CGFloat = 0
+    
+    var photoURL: URL? = nil
+    
+    var image: UIImage? = nil
+    
+    var placeholderImage: UIImage = UIImage()
+    
+    var text: NSAttributedString = NSAttributedString(string: "")
+    
+    var textViewContentInset: UIEdgeInsets = .zero
+    
+    var audioURL: URL
+    var audioSize: CGSize
+    var audioDuration: Float
 
     init(url: URL, duration: Float) {
-        self.url = url
-        self.size = CGSize(width: 160, height: 35)
-        self.duration = duration
+        self.audioURL = url
+        self.audioSize = CGSize(width: 160, height: 35)
+        self.audioDuration = duration
     }
 
 }
+
+private struct MockVideoItem: VideoItem {
+    
+    var imageHeight: CGFloat = 0
+    
+    var photoURL: URL? = nil
+    
+    var image: UIImage? = nil
+    
+    var placeholderImage: UIImage = UIImage()
+    
+    var size: CGSize = .zero
+    
+    var text: NSAttributedString = NSAttributedString(string: "")
+    
+    var textViewContentInset: UIEdgeInsets = .zero
+    
+    var textViewHeight: CGFloat = 0
+    
+    var lineColor: UIColor = .red
+    
+    var timeDuration: Float
+    
+    var videoURL: URL
+    
+    var actionString: NSAttributedString? = nil
+    
+    var bottomTextViewHeight: CGFloat = 0
+    
+    var bottomTextViewContentInset: UIEdgeInsets = .zero
+
+    init(thumbnailImage: UIImage, url: URL, duration: Float) {
+        self.image = thumbnailImage
+        self.videoURL = url
+        self.timeDuration = duration
+    }
+
+}
+
+
 
 
 struct MockMessage: MessageType {
@@ -99,8 +156,8 @@ struct MockMessage: MessageType {
         self.init(kind: .photo(mediaItem), user: user, messageId: messageId)
     }
 
-    init(thumbnail: UIImage, user: MockUser, messageId: String) {
-        let mediaItem = MockMediaItem(image: thumbnail)
+    init(thumbnail: UIImage, videoURL: URL, duration: Float, user: MockUser, messageId: String) {
+        let mediaItem = MockVideoItem(thumbnailImage: thumbnail, url: videoURL, duration: duration)
         self.init(kind: .video(mediaItem), user: user, messageId: messageId)
     }
 
@@ -114,7 +171,7 @@ struct MockMessage: MessageType {
     }
 
     init(audioURL: URL, duration: Float, user: MockUser, messageId: String) {
-        let audioItem = MockAudiotem(url: audioURL, duration: duration)
+        let audioItem = MockAudioItem(url: audioURL, duration: duration)
         self.init(kind: .audio(audioItem), user: user, messageId: messageId)
     }
 

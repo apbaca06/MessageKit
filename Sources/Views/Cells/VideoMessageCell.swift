@@ -64,15 +64,11 @@ open class VideoMessageCell: TemplateMessageCell {
     /// Handle tap gesture on contentView and its subviews.
     open override func handleTapGesture(_ gesture: UIGestureRecognizer) {
         let touchLocation = gesture.location(in: self)
-        // compute action label touch area, currently action label which is hardly touchable
-        let actionView = actionLabel.frame.size.height > 0 ? actionLabel : messageLabel
-        let actionViewTouchArea = CGRect(actionView.frame.origin.x, actionView.frame.origin.y, actionView.frame.size.width, actionView.frame.size.height)
+        let actionViewTouchArea = actionLabel.frame
         let translateTouchLocation = convert(touchLocation, to: messageContainerView)
         
         if actionViewTouchArea.contains(translateTouchLocation) || imageMaskView.frame.contains(translateTouchLocation) {
             delegate?.didTapActionView(in: self)
-        } else {
-            super.handleTapGesture(gesture)
         }
     }
     
@@ -85,18 +81,6 @@ open class VideoMessageCell: TemplateMessageCell {
         
         switch message.kind {
         case .video(let item):
-//            let bubbleWidth = messageContainerView.frame.size.width
-//            imageView.image = item.image ?? item.placeholderImage
-//            imageView.frame = CGRect(x: 0, y: 0, width: bubbleWidth, height: item.imageHeight)
-//            messageLabel.frame = CGRect(x: 0, y: item.imageHeight, width: bubbleWidth, height: item.textViewHeight)
-//            lineView.frame = CGRect(x: 0, y: 0, width: bubbleWidth, height: 0.5)
-//            actionLabel.frame = CGRect(x: 0, y: item.imageHeight + item.textViewHeight, width: bubbleWidth, height: item.bottomTextViewHeight)
-//            messageLabel.attributedText = item.text
-//            messageLabel.textInsets = item.textViewContentInset
-//            actionLabel.attributedText = item.actionString
-//            actionLabel.textContainerInset = item.bottomTextViewContentInset
-//            actionLabel.textAlignment = .center
-//            lineView.backgroundColor = item.lineColor
             timeDurationButton.setTitle(displayDelegate.durationProgressTextFormat(item.timeDuration, for: self, in: messagesCollectionView), for: .normal)
         default:
             break

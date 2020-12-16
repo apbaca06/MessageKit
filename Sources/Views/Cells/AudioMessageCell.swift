@@ -79,6 +79,14 @@ open class AudioMessageCell: MessageContentCell {
         activityIndicatorView.isHidden = true
         return activityIndicatorView
     }()
+    
+    public lazy var progressThumb: UIImageView = {
+        let circleImage = UIImage.messageKitImageWith(type: .circle)
+        let thumbImageView = UIImageView(image: circleImage)
+        return thumbImageView
+    }()
+    
+    public var progressThumbLeftConstraint: NSLayoutConstraint?
 
     public lazy var progressView: UIProgressView = {
         let progressView = UIProgressView(progressViewStyle: .default)
@@ -99,6 +107,9 @@ open class AudioMessageCell: MessageContentCell {
         progressView.addConstraints(left: playButton.rightAnchor, right: durationLabel.leftAnchor, centerY: audioView.centerYAnchor, leftConstant: 6, rightConstant: 8)
         let heightConstraint = progressView.heightAnchor.constraint(equalToConstant: 6)
         progressView.addConstraint(heightConstraint)
+        progressThumbLeftConstraint = progressThumb.leftAnchor.constraint(equalTo:  progressView.leftAnchor, constant: -6)
+        progressThumbLeftConstraint?.isActive = true
+        progressThumb.addConstraints(centerY: progressView.centerYAnchor, widthConstant: 12, heightConstant: 12)
     }
 
     open override func setupSubviews() {
@@ -111,6 +122,7 @@ open class AudioMessageCell: MessageContentCell {
         audioView.addSubview(activityIndicatorView)
         audioView.addSubview(durationLabel)
         audioView.addSubview(progressView)
+        audioView.addSubview(progressThumb)
     }
 
     open override func prepareForReuse() {
@@ -122,6 +134,7 @@ open class AudioMessageCell: MessageContentCell {
         activityIndicatorView.stopAnimating()
         playButton.isHidden = false
         durationLabel.text = "0:00"
+        progressThumbLeftConstraint?.isActive = false
     }
 
     /// Handle tap gesture on contentView and its subviews.
@@ -187,5 +200,16 @@ open class AudioMessageCell: MessageContentCell {
     /// Return false when the contentView does not need to handle the gesture.
     open override func cellContentView(canHandle touchPoint: CGPoint) -> Bool {
         return messageLabel.handleGesture(touchPoint)
+    }
+    
+    public func moveProgressThumb(toOriginal: Bool = false) {
+        guard let leftConstraint = progressThumbLeftConstraint else { return }
+        leftConstraint.isActive = true
+        let originalConstant = -progressThumb.bounds.width / 2
+        if progressView.progress == 1 || toOriginal {
+            leftConstraint.constant = originalConstant
+        } else {
+            leftConstraint.constant = originalConstant + (CGFloat(progressView.progress) * progressView.bounds.width).rounded(.up)
+        }
     }
 }

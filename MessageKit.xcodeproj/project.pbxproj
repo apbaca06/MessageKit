@@ -97,7 +97,7 @@
 		B7A03F7B1F866B85006AEF79 /* MessageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7A03F7A1F866B85006AEF79 /* MessageCollectionViewCell.swift */; };
 		D0C1A8E7244FE58100177317 /* TemplateItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C1A8E6244FE58100177317 /* TemplateItem.swift */; };
 		D0C1A8E9244FE8A700177317 /* TemplateMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C1A8E8244FE8A700177317 /* TemplateMessageCell.swift */; };
-		F9FC56302575EA4E0090626A /* VideoMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9FC562F2575EA4E0090626A /* VideoMessageCell.swift */; };
+		F9FC56302575EA4E0090626A /* MediaMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9FC562F2575EA4E0090626A /* MediaMessageCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -218,7 +218,7 @@
 		B7A03F7A1F866B85006AEF79 /* MessageCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCollectionViewCell.swift; sourceTree = "<group>"; };
 		D0C1A8E6244FE58100177317 /* TemplateItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateItem.swift; sourceTree = "<group>"; };
 		D0C1A8E8244FE8A700177317 /* TemplateMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateMessageCell.swift; sourceTree = "<group>"; };
-		F9FC562F2575EA4E0090626A /* VideoMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoMessageCell.swift; sourceTree = "<group>"; };
+		F9FC562F2575EA4E0090626A /* MediaMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaMessageCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -267,7 +267,7 @@
 				B7A03F361F866946006AEF79 /* TextMessageCell.swift */,
 				38F8063621740DD500CDB9DB /* TypingIndicatorCell.swift */,
 				D0C1A8E8244FE8A700177317 /* TemplateMessageCell.swift */,
-				F9FC562F2575EA4E0090626A /* VideoMessageCell.swift */,
+				F9FC562F2575EA4E0090626A /* MediaMessageCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -646,7 +646,7 @@
 				382C794221705D2000F4FAF5 /* HorizontalEdgeInsets.swift in Sources */,
 				B7A03F3C1F866946006AEF79 /* LocationMessageCell.swift in Sources */,
 				1FF377AA20087D78004FD648 /* MessagesViewController+Menu.swift in Sources */,
-				F9FC56302575EA4E0090626A /* VideoMessageCell.swift in Sources */,
+				F9FC56302575EA4E0090626A /* MediaMessageCell.swift in Sources */,
 				B7A03F5B1F8669CA006AEF79 /* MessageType.swift in Sources */,
 				B7A03F601F8669CA006AEF79 /* MessagesDisplayDelegate.swift in Sources */,
 				1FE783A8206633C0007FA024 /* InsetLabel.swift in Sources */,

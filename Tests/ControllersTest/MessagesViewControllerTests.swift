@@ -140,6 +140,8 @@ class MessagesViewControllerTests: XCTestCase {
         let messagesDataSource = MockMessagesDataSource()
         sut.messagesCollectionView.messagesDataSource = messagesDataSource
         messagesDataSource.messages.append(MockMessage(thumbnail: UIImage(),
+                                                       videoURL: URL(string: "")!,
+                                                       duration: 0,
                                                        user: messagesDataSource.senders[0],
                                                        messageId: "test_id"))
 

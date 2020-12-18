@@ -288,7 +288,7 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
             cell.configure(with: message, at: indexPath, and: messagesCollectionView)
             return cell
         case .media:
-            let cell = messagesCollectionView.dequeueReusableCell(VideoMessageCell.self, for: indexPath)
+            let cell = messagesCollectionView.dequeueReusableCell(MediaMessageCell.self, for: indexPath)
             cell.configure(with: message, at: indexPath, and: messagesCollectionView)
             return cell
         case .photo, .loading:

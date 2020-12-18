@@ -1,5 +1,5 @@
 //
-//  VideoMessageCell.swift
+//  MediaMessageCell.swift
 //  MessageKit
 //
 //  Created by Jui hsin Chen on 2020/12/1.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-open class VideoMessageCell: TemplateMessageCell {
+open class MediaMessageCell: TemplateMessageCell {
     
     open lazy var playButton: UIButton = {
         let assetBundle = Bundle.messageKitAssetBundle()

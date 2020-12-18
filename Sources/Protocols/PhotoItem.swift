@@ -24,9 +24,11 @@
 
 import Foundation
 
-/// A protocol used to represent the data for a media message.
-public protocol MediaItem {
-
+/// A protocol used to represent the data for a photo message.
+public protocol PhotoItem {
+    /// The image's height
+    var imageHeight: CGFloat { get }
+    
     /// The url where the media is located.
     var photoURL: URL? { get }
 
@@ -40,9 +42,10 @@ public protocol MediaItem {
     var size: CGSize { get }
 }
 
-public protocol VideoItem: TemplateItem {
-    /// The time duration of the video
+/// A protocol used to represent the data for a media message.
+public protocol MediaItem: TemplateItem {
+    /// The time duration of the media
     var timeDuration: Float { get }
-    /// The video url
-    var videoURL: URL { get }
+    /// The media url
+    var mediaURL: URL { get }
 }

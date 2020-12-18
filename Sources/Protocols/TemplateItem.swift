@@ -30,7 +30,5 @@ public protocol ActionItem {
     var bottomTextViewContentInset: UIEdgeInsets { get }
 }
 
-public protocol TemplateItem: MediaItem, MessageItem, ActionItem {
-    /// The image's height
-    var imageHeight: CGFloat { get }
+public protocol TemplateItem: PhotoItem, MessageItem, ActionItem {
 }

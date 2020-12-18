@@ -28,7 +28,7 @@ open class MediaMessageSizeCalculator: MessageSizeCalculator {
 
     open override func messageContainerSize(for message: MessageType) -> CGSize {
         let maxWidth = messageContainerMaxWidth(for: message)
-        let sizeForMediaItem = { (maxWidth: CGFloat, item: MediaItem) -> CGSize in
+        let sizeForMediaItem = { (maxWidth: CGFloat, item: PhotoItem) -> CGSize in
             if maxWidth < item.size.width {
                 // Maintain the ratio if width is too great
                 let height = maxWidth * item.size.height / item.size.width

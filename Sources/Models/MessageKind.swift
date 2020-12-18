@@ -40,13 +40,13 @@ public enum MessageKind {
     case attributedText(NSAttributedString)
 
     /// A photo message.
-    case photo(MediaItem)
+    case photo(PhotoItem)
 
-    /// A video message.
-    case video(VideoItem)
+    /// A media message.
+    case media(MediaItem)
     
     /// A loading message.
-    case loading(MediaItem)
+    case loading(PhotoItem)
 
     /// A template message
     case template(TemplateItem)

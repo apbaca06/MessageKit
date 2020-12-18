@@ -25,7 +25,7 @@
 import UIKit
 
 /// A subclass of `MessageContentCell` used to display video and audio messages.
-open class MediaMessageCell: MessageContentCell {
+open class PhotoMessageCell: MessageContentCell {
 
     /// The play button view to display on video messages.
     open lazy var playButtonView: PlayButtonView = {
@@ -79,7 +79,7 @@ open class MediaMessageCell: MessageContentCell {
             break
         }
 
-        displayDelegate.configureMediaMessageImageView(imageView, for: message, at: indexPath, in: messagesCollectionView)
+        displayDelegate.configurePhotoMessageImageView(imageView, for: message, at: indexPath, in: messagesCollectionView)
     }
     
     /// Handle tap gesture on contentView and its subviews.

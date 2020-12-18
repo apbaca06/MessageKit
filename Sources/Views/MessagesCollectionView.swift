@@ -74,7 +74,7 @@ open class MessagesCollectionView: UICollectionView {
     
     private func registerReusableViews() {
         register(TextMessageCell.self)
-        register(MediaMessageCell.self)
+        register(PhotoMessageCell.self)
         register(TemplateMessageCell.self)
         register(LocationMessageCell.self)
         register(AudioMessageCell.self)

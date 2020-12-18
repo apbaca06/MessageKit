@@ -120,7 +120,7 @@ class MessagesViewControllerTests: XCTestCase {
         XCTAssertTrue(cell is TextMessageCell)
     }
 
-    func testCellForItemWithPhotoData_returnsMediaMessageCell() {
+    func testCellForItemWithPhotoData_returnsPhotoMessageCell() {
         let messagesDataSource = MockMessagesDataSource()
         sut.messagesCollectionView.messagesDataSource = messagesDataSource
         messagesDataSource.messages.append(MockMessage(image: UIImage(),
@@ -133,7 +133,7 @@ class MessagesViewControllerTests: XCTestCase {
                                                                          cellForItemAt: IndexPath(item: 0, section: 0))
 
         XCTAssertNotNil(cell)
-        XCTAssertTrue(cell is MediaMessageCell)
+        XCTAssertTrue(cell is PhotoMessageCell)
     }
 
     func testCellForItemWithVideoData_returnsMediaMessageCell() {

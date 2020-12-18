@@ -101,7 +101,7 @@ open class TemplateMessageCell: MessageContentCell {
             break
         }
 
-        displayDelegate.configureMediaMessageImageView(imageView, for: message, at: indexPath, in: messagesCollectionView)
+        displayDelegate.configurePhotoMessageImageView(imageView, for: message, at: indexPath, in: messagesCollectionView)
         
         let enabledDetectors = displayDelegate.enabledDetectors(for: message, at: indexPath, in: messagesCollectionView)
 

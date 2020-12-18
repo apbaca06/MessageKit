@@ -192,7 +192,7 @@ open class MessagesCollectionViewFlowLayout: UICollectionViewFlowLayout {
             return photoMessageSizeCalculator
         case .loading:
             return photoMessageSizeCalculator
-        case .video:
+        case .media:
             return videoMessageSizeCalculator
         case .template:
             return templateMessageSizeCalculator

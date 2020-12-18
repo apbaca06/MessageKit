@@ -80,7 +80,7 @@ open class VideoMessageCell: TemplateMessageCell {
         }
         
         switch message.kind {
-        case .video(let item):
+        case .media(let item):
             timeDurationButton.setTitle(displayDelegate.durationProgressTextFormat(item.timeDuration, for: self, in: messagesCollectionView), for: .normal)
         default:
             break

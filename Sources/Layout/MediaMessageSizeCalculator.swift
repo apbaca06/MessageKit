@@ -39,7 +39,7 @@ open class MediaMessageSizeCalculator: MessageSizeCalculator {
         switch message.kind {
         case .photo(let item):
             return sizeForMediaItem(maxWidth, item)
-        case .video(let item):
+        case .media(let item):
             return sizeForMediaItem(maxWidth, item)
         case .loading(let item):
             return sizeForMediaItem(maxWidth, item)

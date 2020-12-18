@@ -84,7 +84,7 @@ open class TemplateMessageCell: MessageContentCell {
         }
 
         switch message.kind {
-        case .template(let item), .video(let item as TemplateItem):
+        case .template(let item), .media(let item as TemplateItem):
             let bubbleWidth = messageContainerView.frame.size.width
             imageView.image = item.image ?? item.placeholderImage
             imageView.frame = CGRect(x: 0, y: 0, width: bubbleWidth, height: item.imageHeight)

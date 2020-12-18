@@ -72,7 +72,7 @@ open class MediaMessageCell: MessageContentCell {
         case .photo(let mediaItem):
             imageView.image = mediaItem.image ?? mediaItem.placeholderImage
             playButtonView.isHidden = true
-        case .video(let mediaItem):
+        case .media(let mediaItem):
             imageView.image = mediaItem.image ?? mediaItem.placeholderImage
             playButtonView.isHidden = false
         default:

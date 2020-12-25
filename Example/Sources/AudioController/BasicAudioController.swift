@@ -89,7 +89,7 @@ open class BasicAudioController: NSObject, AVAudioPlayerDelegate {
             guard let displayDelegate = collectionView.messagesDisplayDelegate else {
                 fatalError("MessagesDisplayDelegate has not been set.")
             }
-            cell.durationLabel.text = displayDelegate.audioProgressTextFormat(Float(player.currentTime), for: cell, in: collectionView)
+            cell.durationLabel.text = displayDelegate.durationProgressTextFormat(Float(player.currentTime), for: cell, in: collectionView)
         }
     }
 
@@ -146,7 +146,7 @@ open class BasicAudioController: NSObject, AVAudioPlayerDelegate {
             guard let displayDelegate = collectionView.messagesDisplayDelegate else {
                 fatalError("MessagesDisplayDelegate has not been set.")
             }
-            cell.durationLabel.text = displayDelegate.audioProgressTextFormat(Float(player.duration), for: cell, in: collectionView)
+            cell.durationLabel.text = displayDelegate.durationProgressTextFormat(Float(player.duration), for: cell, in: collectionView)
             cell.delegate?.didStopAudio(in: cell)
         }
         progressTimer?.invalidate()
@@ -187,7 +187,7 @@ open class BasicAudioController: NSObject, AVAudioPlayerDelegate {
                 guard let displayDelegate = collectionView.messagesDisplayDelegate else {
                     fatalError("MessagesDisplayDelegate has not been set.")
                 }
-                cell.durationLabel.text = displayDelegate.audioProgressTextFormat(Float(player.currentTime), for: cell, in: collectionView)
+                cell.durationLabel.text = displayDelegate.durationProgressTextFormat(Float(player.currentTime), for: cell, in: collectionView)
             } else {
                 // if the current message is not the same with playing message stop playing sound
                 stopAnyOngoingPlaying()
